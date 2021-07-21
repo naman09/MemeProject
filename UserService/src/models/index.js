@@ -1,13 +1,12 @@
 const Sequelize=require('sequelize') ;
-const dotenv=require('dotenv') ;
-dotenv.config() ;
+require('dotenv').config();
 
 const { DataTypes } = require('sequelize');
 const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/UserDB` ;
 
 const db = new Sequelize(path, {
     define: {
-        timestacomps: false
+        timestamps: false
     }
 });
 
@@ -18,13 +17,6 @@ const User = db.define('User',{
     },
     Password:{
         type:Sequelize.STRING,
-        validate:{
-            len:[8,20],
-            is:/.*[a-z].*/i,
-            is:/.*[A-Z].*/i,
-            is:/.*[0-9].*/i,
-            is:/.*\W.*/i
-        }
     }
 });
 

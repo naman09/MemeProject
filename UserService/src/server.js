@@ -1,7 +1,9 @@
 const express = require('express');
 const { db } = require('./models');
 const app = express();
-PORT = 5555;
+require('dotenv').config();
+
+PORT = process.env.SERVER_PORT
 
 app.use('/health', (req,res) => {
     res.send("OK");
