@@ -1,10 +1,13 @@
 const Sequelize=require('sequelize') ;
+const dotenv=require('dotenv') ;
+dotenv.config() ;
+
 const { DataTypes } = require('sequelize');
-const path = 'mysql://admin:memeProjectAdmin@localhost:3306/UserDB';
+const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/UserDB` ;
 
 const db = new Sequelize(path, {
     define: {
-        timestamps: false
+        timestacomps: false
     }
 });
 
