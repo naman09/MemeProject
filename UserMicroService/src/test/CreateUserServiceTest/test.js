@@ -9,11 +9,11 @@ describe("CreateUser Service",()=>{
             db.sync();
         });
         test("Is not null",()=>{
-            expect(CreateUserServiceInstance).not.toBeNUll 
+            expect(CreateUserServiceInstance).not.toBeNUll ;
         });
         test("Create new user",()=>{
             console.log(CreateUserServiceInstance.createUser({UserId:"Shubham",Password:"ANSvjdsd1@#"}))
-            expect(CreateUserServiceInstance.createUser({UserId:"Shubham",Password:"ANSvjdsd1@#"}).success).toBeTruthy()
+            expect(CreateUserServiceInstance.createUser({UserId:"Shubham",Password:"ANSvjdsd1@#"})).not.toBeNull;
         });
     })
     

@@ -1,3 +1,6 @@
 curl http://localhost:5555/api/users/create --data '{"UserId":"Ramesh","Password":"xyzASD12@"}'
-curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/users/create 
-curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/users/login 
+curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/create 
+curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/login 
+curl -d "UserId=OM7&Password=aA2233@Adfdsf4" POST http://localhost:5555/api/create 
+
+curl -d "UserId=OM11&Password=aA2233@Adfdsf4" POST http://localhost:5555/api/create 

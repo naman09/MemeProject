@@ -1,73 +1,78 @@
 const { Router } = require("express");
-const route = Router();
+const { hash } = require('bcrypt');
 const CreateUserService = require("../services/CreateUserService");
 const AuthUserService = require("../services/AuthUserService");
-
-const { hash } = require('bcrypt');
-
 const createUserServiceInstance = new CreateUserService();
 const authUserServiceInstance = new AuthUserService();
 
-//insert and send a user
-route.get('/', (req, res) => {
-    res.send({
-        "user": {
-            "name": "Naman",
-            "password": 21,
-        }
-    });
-});
-
-// route.get('/:{userId}', (req, res) => {
-
-// });
-
-route.post('/create', (req, res) => {
-    console.log("Inside create user api");
-    console.log(req.body);
-
-    const userObj = req.body;
-
+const createUser = async (req, res, next) => {
+    const userObj = req.body ;
     if (!createUserServiceInstance.validateUserObj(userObj)) {
-        return res.status(400).send({ success: 0, message: "User Validation failed"});
+        return res.status(400).send({ 
+            error: {
+                code: 400,
+                message: "User Object Validation failed",
+            }
+        });
+    }
+    try{
+        const hashedPassword = await hash(userObj.Password, 10);
+        userObj.Password = hashedPassword;
+        const results = await createUserServiceInstance.createUser(userObj);
+        return res.status(200).send({
+            code: 200,
+            data: results
+        });
+    } catch(err) {
+        console.log("Error in createUser");
+        next(err) ;
     }
     
-    hash(userObj.Password, 10).then((hashedPassword) => {
-        userObj.Password = hashedPassword;
-        createUserServiceInstance.createUser(userObj, (err, results) => {
-            if (err) {
-                console.log(err.message, ": ", err.errors[0].message);
-                return res.status(500).send({
-                  success: 0,
-                  message: err.errors[0].message
-                });
-              }
-              return res.status(200).send({
-                success: 1,
-                message: "User created successfully",
-                data: results
-              });
+}
+
+const login = async (req, res, next) => {
+    if (!req.body.UserId || !req.body.Password) {
+        return res.status(400).send({
+            error: {
+                code: 400,
+                message: "Invalid UserId or Password",
+            }
         });
-    });
-
-});
-
-route.post('/login', (req, res) => {
-    authUserServiceInstance.login(req.body, (err, results) => {
-        if (err) {
-            res.status(400).send({
-                success: 0,
-                message: err.message
+    } 
+    
+    try {
+        const result = await authUserServiceInstance.login(req.body.UserId, req.body.Password);
+        if (result) {
+            res.status(200).send({
+                data: {
+                    token: result
+                }
             });
         } else {
-            res.status(200).send({
-                success: 1,
-                message: "Login Successful",
-                data: results
+            res.status(400).send({
+                error: {
+                    code: 404,
+                    message: "Invalid UserId or Password",
+                }
             });
         }
-    });
-    
-})
+    } catch(err){   
+        next(err);
+    }
+}
 
-module.exports = route;
+
+
+
+/*
+TODO
+route.get("/preferences/:UserId") --> List of category id
+route.get("/favmemes/:UserId") --> List of favourite memes
+route.put("/updatePreferences")
+route.put("/likeness/:MemeId/:UserId")
+route.get("/likeness/:MemeId/:UserId")
+*/
+module.exports = {
+    createUser,
+    login
+}

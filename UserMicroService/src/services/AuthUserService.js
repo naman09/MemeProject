@@ -6,44 +6,42 @@ class AuthUserService {
     
     constructor() {}
 
-    login(userObj, callBack) {
-        console.log("Inside login")
-        User.findAll({
-            where: {
-                UserId: userObj.UserId
-            }
-        }).then((loggedUser)=> {
-            if (!loggedUser) {
-                console.log("Error: User with this UserId does not exists");
-                callBack(null,{ message: "User with this UserId does not exists" });
-            }
-            loggedUser = loggedUser[0].dataValues;
-            console.log("User: ", loggedUser);
-            console.log(userObj.Password, " ", loggedUser.Password);
-
-            compare(userObj.Password, loggedUser.Password).then((result) => {
-                if (result) {
-                    loggedUser.Password = undefined; //Don't want to include password in token
-                    const jsontoken = sign({ result: loggedUser }, "qwe1234", { //TODO write secret Key correctly
-                        expiresIn: "1h"
-                    });
-                    callBack(null, {
-                        token: jsontoken
-                    });
-                } else {
-                    callBack(null,{ message: "Invalid password" });
+    async login(userId, password) {
+        console.log("Inside login");
+        try {
+            const userList = await User.findAll({
+                where: {
+                    UserId: userId
                 }
             });
+           
+            if (userList.length === 0) { //invalid UserId
+                console.log("Invalid UserId");
+                return null; 
+            }
+            const userObj = userList[0].dataValues;
+            console.log("User Object: ", userObj);
 
-
-        })
-        .catch(err => {
-            callBack(err, {
-                success: 0
-            });
-        });    
+            // compare supplied password with password in DB
+            const isMatch = await compare(password, userObj.Password); 
+            if (isMatch) {
+                // generate token
+                console.log("Password Matched");
+                userObj.Password = undefined;
+                const jsontoken = sign({ result: userObj }, "qwe1234", { //TODO write secret Key correctly
+                    expiresIn: "1h"
+                });
+                console.log("Token :", jsontoken);
+                return jsontoken;
+            } else {
+                return null;
+            }
+        } catch(err) {
+            const error = new Error("DB Error : " + err.message);
+            error.isOperational = true;
+            throw error;
+        }
     }
-    
 }
 
 module.exports = AuthUserService;

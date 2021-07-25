@@ -8,6 +8,7 @@ class CreateUserService {
     constructor () {}
 
     validateUserObj(userObj) {
+        console.log("Inside validateUserObj");
         if (!userObj) {
             return false;
         } else if (!userObj.UserId) {
@@ -26,26 +27,31 @@ class CreateUserService {
         return true;
     }
 
-    createUser(userObj, callBack) {
-        console.log("Inside create user");
-
-        User.create({
-            UserId: userObj.UserId,
-            Password: userObj.Password
-        }).then((users) => {
-            if (users) {
+    async createUser(userObj) {
+        console.log("Inside createUser");
+        try{
+            let user = await User.create({
+                UserId: userObj.UserId,
+                Password: userObj.Password
+            });
+            user = user.dataValues;
+            await console.log(user) ;
+            if(user){
                 console.log("User created successfully");
-                users.Password = undefined;
-                callBack(null, { success: 1, data: users });
-            } else { 
-                console.log("Error inserting new record"); //TODO WHEN IT IS HIT?
-                callBack(null, { success: 0, message:'Error in insert new record' });
+                return user;
             }
-        })
-        .catch((err) => {  
-            callBack(err, { success: 0 });
-        });
-
+            else {
+                console.log("User creation failed");
+                const error = new Error("Insertion failed : " + err.message);
+                error.isOperational = false;
+                throw error;
+            }
+        } catch(err) {
+            console.log("DB Error : " + err.message);
+            const error = new Error("DB Error : " + err.message);
+            error.isOperational = true;
+            throw error;
+        }
     }
 }
 module.exports = CreateUserService;
