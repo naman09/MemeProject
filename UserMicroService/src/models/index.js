@@ -38,6 +38,7 @@ const UserMeme = db.define('UserMeme', {
     },
     LastUpdatedAt: {
         type: Sequelize.DATE, //DATETIME in mysql
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
     }
 
@@ -53,6 +54,11 @@ User.hasMany(UserMeme, {
 
 // UserMeme.belongsToMany(Users)
 const UserCategory = db.define('UserCategory', {
+    CategoryId:{
+        type:DataTypes.STRING,
+        allowNull: false ,
+        primaryKey:true 
+    },
     AccessCount: {
         type:DataTypes.INTEGER,
         defaultValue: 0,
@@ -68,11 +74,6 @@ const UserCategory = db.define('UserCategory', {
         defaultValue: 0,
         allowNull: false 
     },
-    CategoryId:{
-        type:DataTypes.STRING,
-        allowNull: false ,
-        primaryKey:true 
-    }
 });
 
 User.hasMany(UserCategory,{
@@ -85,5 +86,7 @@ User.hasMany(UserCategory,{
 
 module.exports = {
     db,
-    User
+    User,
+    UserMeme,
+    UserCategory
 };

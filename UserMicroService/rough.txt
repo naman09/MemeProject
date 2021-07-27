@@ -3,4 +3,11 @@ curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/cre
 curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/login 
 curl -d "UserId=OM7&Password=aA2233@Adfdsf4" POST http://localhost:5555/api/create 
 
-curl -d "UserId=OM11&Password=aA2233@Adfdsf4" POST http://localhost:5555/api/create 
+curl -d "UserId=OM&Password=aA2233@Adfdsf4" POST http://localhost:5555/api/create 
+
+
+insert into UserCategories (CategoryId,UserId) values('1','OM');
+insert into UserCategories (CategoryId,UserId) values('2','OM');
+insert into UserCategories (CategoryId,UserId) values('3','OM');
+
+insert into UserMemes (MemeId,UserId,LastUpdatedAt) values('123','OM','2021-07-27 22:15:44') ;

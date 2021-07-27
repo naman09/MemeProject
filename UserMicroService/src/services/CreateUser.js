@@ -13,12 +13,15 @@ class CreateUserService {
             return false;
         } else if (!userObj.UserId) {
             return false;
+        } else if (!(userObj.UserId instanceof String)) {
+            return false;
         }
         return this.validatePassword(userObj.Password);
     }
 
     validatePassword(pass) {
         console.log("Inside validatePassword");
+        if (!(pass instanceof String)) return false;
         if (pass.length < 8) return false;
         if (pass.match(/.*[A-Z].*/i)!=pass) return false;
         if (pass.match(/.*[a-z].*/i)!=pass) return false;
@@ -47,9 +50,12 @@ class CreateUserService {
                 throw error;
             }
         } catch(err) {
-            console.log("DB Error : " + err.message);
-            const error = new Error("DB Error : " + err.message);
+            const errMessage = String(err);
+            console.log("DB Error : " + errMessage);
+            const error = new Error("DB Error : " + errMessage);
             error.isOperational = true;
+            if (errMessage.search("Validation error") !== -1)
+                error.isBadRequest = true;
             throw error;
         }
     }
