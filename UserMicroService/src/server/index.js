@@ -25,6 +25,14 @@ app.use((err, req, res, next) => {
         });
     }
 
+    if (err.isUnauthorized) { //User will be redirected to login page
+        return res.status(400).send({
+            code: 401,
+            message: err.message,
+            errors: err.errors
+        });
+    }
+
     res.status(500).send({
         error: {
             code: 500,

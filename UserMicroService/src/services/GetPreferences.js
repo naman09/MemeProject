@@ -4,12 +4,13 @@ const { UserMeme , UserCategory } = require('../models')
 class GetPreferences {
     constructor() {}
 
-    // TODO Write one common function for validatoon 
-    validateUserId(userId) {
+    // TODO Write one common function for validation 
+    validateId(userId) {
         if (!userId) return false;
         if (typeof(userId) !== "string") return false;
         return true;
     }
+
 
     cmp(categoryA,categoryB) {
         const likenessA = categoryA.UserCategoryLikeness/categoryA.UserActivityCount;
@@ -44,10 +45,40 @@ class GetPreferences {
         }
     }
 
-     //return list
+     
+     async getMemeLikeness(userId, memeId) {
+        if (!this.validateId(userId) || !this.validateId(memeId)) {
+            const error = new Error("Invalid UserId or MemeId");
+            error.isBadRequest = true;
+            throw error;
+        }
+        try {
+            const meme = await UserMeme.findOne({
+                where:{
+                    UserId:userId,
+                    MemeId:memeId
+                }
+            }); 
+            if (!meme || !meme.dataValues) {
+                const error = new Error("Invalid UserId or MemeId");
+                error.isBadRequest = true;
+                throw error;
+            }
+            return meme.dataValues.UserMemeLikeness ;
+        } catch(err) {
+            console.log("DB Error: " + err);
+            const error = new Error("DB Error: " + err);
+            if (String(err).search("Validation error") != -1) {
+                error.isBadRequest = true;
+            }
+            throw error;
+        }
+    }
+
+    //return list
      //TODO return only a few memes not all 
-     async getFavMemes(userId) {
-        if (!this.validateUserId(userId)) {
+    async getFavMemes(userId) {
+        if (!this.validateId(userId)) {
             const error = new Error("Invalid user id");
             error.isBadRequest = true;
             throw error;

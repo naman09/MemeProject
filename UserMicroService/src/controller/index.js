@@ -28,6 +28,7 @@ const createUser = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => { 
+    console.log("Inside login");
     try {
         const result = await authUserServiceInstance.login(req.body.UserId, req.body.Password);
         if (result) {
@@ -47,6 +48,7 @@ const login = async (req, res, next) => {
     }
 }
 
+//TODO: it is like an internal function to be used by MemeMicro service
 const updatePreferences =  async (req, res, next) => {
     console.log("Inside updatePreferences")
     const preferencesObj = req.body;
@@ -93,6 +95,21 @@ const getFavMemes = async (req, res, next) => {
     }
 }
 
+const getMemeLikeness = async (req, res, next) => {
+    try {
+        const memeLikeness = await getPreferecesServiceInstance.getMemeLikeness(req.params.UserId, req.params.MemeId);
+        return res.status(200).send({
+            data: {
+                memeLikeness: memeLikeness 
+            }
+        })
+    } catch (err) {
+        console.log("Error in getMemeLikeness");
+        next(err);
+    } 
+}
+
+
 
 /*
 TODO
@@ -107,5 +124,6 @@ module.exports = {
     login,
     updatePreferences,
     getUserCategories,
-    getFavMemes
+    getFavMemes,
+    getMemeLikeness
 }

@@ -50,6 +50,5 @@ describe('Create User',() => {
             Password: password
         });
         expect(res.statusCode).toEqual(400);
-
     });
 });
