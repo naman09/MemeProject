@@ -19,6 +19,7 @@ describe('Create User',() => {
     });
     const randomUserId = crypto.randomBytes(20).toString('hex');
     const password = "Aa7@aaaaaaaaa";  
+    console.log(randomUserId,typeof(randomUserId))  ;
 
     xit('should create a new user',async ()=>{
         
@@ -49,7 +50,6 @@ describe('Create User',() => {
             Password: password
         });
         expect(res.statusCode).toEqual(400);
-        expect(res.body.message).to
 
     });
 });

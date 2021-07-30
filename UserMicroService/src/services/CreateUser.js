@@ -13,7 +13,7 @@ class CreateUserService {
             return false;
         } else if (!userObj.UserId) {
             return false;
-        } else if (!(userObj.UserId instanceof String)) {
+        } else if (typeof(userObj.UserId) !== "string") {
             return false;
         }
         return this.validatePassword(userObj.Password);
@@ -21,7 +21,7 @@ class CreateUserService {
 
     validatePassword(pass) {
         console.log("Inside validatePassword");
-        if (!(pass instanceof String)) return false;
+        if (typeof(pass) !== "string") return false;
         if (pass.length < 8) return false;
         if (pass.match(/.*[A-Z].*/i)!=pass) return false;
         if (pass.match(/.*[a-z].*/i)!=pass) return false;
@@ -32,6 +32,11 @@ class CreateUserService {
 
     async createUser(userObj) {
         console.log("Inside createUser");
+        if (!this.validateUserObj(userObj)) {
+            const error = new Error("User Object Validation failed");
+            error.isBadRequest = true;
+            throw error ;
+        }
         try{
             let user = await User.create({
                 UserId: userObj.UserId,
@@ -53,7 +58,7 @@ class CreateUserService {
             const errMessage = String(err);
             console.log("DB Error : " + errMessage);
             const error = new Error("DB Error : " + errMessage);
-            error.isOperational = true;
+            error.isOperational = true; //TODO either remove or keep everywhere
             if (errMessage.search("Validation error") !== -1)
                 error.isBadRequest = true;
             throw error;

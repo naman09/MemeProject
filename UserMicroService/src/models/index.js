@@ -54,7 +54,7 @@ User.hasMany(UserMeme, {
 
 // UserMeme.belongsToMany(Users)
 const UserCategory = db.define('UserCategory', {
-    CategoryId:{
+    CategoryId: {
         type:DataTypes.STRING,
         allowNull: false ,
         primaryKey:true 
@@ -64,12 +64,12 @@ const UserCategory = db.define('UserCategory', {
         defaultValue: 0,
         allowNull: false
     },
-    UserActivityCount:{
+    UserActivityCount: {
         type:DataTypes.INTEGER,
-        defaultValue: 0,
+        defaultValue: 1,
         allowNull: false
     },
-    UserCategoryLikeness:{
+    UserCategoryLikeness: {
         type:DataTypes.BIGINT(11),
         defaultValue: 0,
         allowNull: false 
@@ -83,6 +83,9 @@ User.hasMany(UserCategory,{
         allowNull: false,
     }
 });
+
+
+
 
 module.exports = {
     db,

@@ -11,3 +11,25 @@ insert into UserCategories (CategoryId,UserId) values('2','OM');
 insert into UserCategories (CategoryId,UserId) values('3','OM');
 
 insert into UserMemes (MemeId,UserId,LastUpdatedAt) values('123','OM','2021-07-27 22:15:44') ;
+
+function foo() {
+    if ("123" instanceof String) {
+        console.log("fff");
+    }
+    else {
+        console.log("2222");
+    }
+}
+foo();
+
+typeof str === "string"
+
+
+
+        INSERT INTO UserCategories 
+        (CategoryId, AccessCount, UserActivityCount, UserCategoryLikeness, UserId) 
+        VALUES ('1',0,1, 100,'43f75d5470b258bba1ba1e7a0c1eb734289a50cc'),
+        ('2',0,1,100,'43f75d5470b258bba1ba1e7a0c1eb734289a50cc'),
+        ('4',0,1,100,'43f75d5470b258bba1ba1e7a0c1eb734289a50cc') 
+        ON DUPLICATE KEY UPDATE UserCategoryLikeness=UserCategoryLikeness + 100,
+        UserActivityCount=UserActivityCount+1;

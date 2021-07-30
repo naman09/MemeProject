@@ -7,6 +7,11 @@ class AuthUserService {
     constructor() {}
 
     async login(userId, password) {
+        if (!req.body.UserId || !req.body.Password) {
+            const error = new Error("Invalid UserId or Password");
+            error.isBadRequest = true;
+            throw error;
+        }
         console.log("Inside login");
         try {
             const userList = await User.findAll({
