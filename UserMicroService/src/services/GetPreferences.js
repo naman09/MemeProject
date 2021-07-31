@@ -20,7 +20,7 @@ class GetPreferences {
     }
 
     async getUserCategories(userId) {
-        if (!this.validateUserId(userId)) {
+        if (!this.validateId(userId)) {
             const error = new Error("Invalid user id");
             error.isBadRequest = true;
             throw error;

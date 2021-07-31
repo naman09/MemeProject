@@ -8,12 +8,8 @@ describe("CreateUser Service",()=>{
         beforeAll( async () => {
            await db.sync();
         });
-        xit("Is not null",()=>{
+        it("Is not null",() => {
             expect(CreateUserServiceInstance).not.toBeNUll ;
-        });
-        xit("Create new user",()=>{
-            console.log(CreateUserServiceInstance.createUser({UserId:"Shubham",Password:"ANSvjdsd1@#"}))
-            expect(CreateUserServiceInstance.createUser({UserId:"Shubham",Password:"ANSvjdsd1@#"})).not.toBeNull;
         });
     })
     

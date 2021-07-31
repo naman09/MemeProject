@@ -8,7 +8,9 @@ class AuthUserService {
 
     async login(userId, password) {
         console.log("Inside login");
+        console.log(userId, password);
         if (!userId || !password) {
+            console.log("Invalid UserId or Password");
             const error = new Error("Invalid UserId or Password");
             error.isBadRequest = true;
             throw error;
@@ -39,11 +41,16 @@ class AuthUserService {
                 console.log("Token :", jsontoken);
                 return jsontoken;
             } else {
+                console.log("Password did not match");
                 return null;
             }
         } catch(err) {
-            const error = new Error("DB Error : " + err.message);
+            console.log("DB Error : " + err);
+            const error = new Error("DB Error : " + err);
             error.isOperational = true;
+            if (String(err).search("Validation error") != -1) {
+                error.isBadRequest = true;
+            }
             throw error;
         }
     }

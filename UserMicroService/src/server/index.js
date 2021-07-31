@@ -15,8 +15,7 @@ app.use('/api',require('../routes'));
 
 //TODO : How to it better
 app.use((err, req, res, next) => {
-    console.log("Error in error handler middleware");
-
+    console.log("Error in error handler middleware : " + err);
     if (err.isBadRequest) {
         return res.status(400).send({
             code: 400,

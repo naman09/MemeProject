@@ -6,7 +6,10 @@ class UpdatePreferenceService {
 
     validatePreferencesObject(preferencesObj){
         if (!preferencesObj) return false;
-        if (typeof(preferencesObj.MemeId) !== "string") return false ;
+        if (typeof(preferencesObj.MemeId) !== "string") {
+            con
+            return false ;
+        }
         if (typeof(preferencesObj.UserId) !== "string") return false ;
         if (typeof(preferencesObj.NewMemeLikeness) !== "number") return false ;
         if (!preferencesObj.CategoryIdList) return false ;
