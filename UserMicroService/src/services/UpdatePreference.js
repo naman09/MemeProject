@@ -43,7 +43,7 @@ class UpdatePreferenceService {
         return queryString ; 
     }
 
-    async updateUserCategory(upsertQuery) {
+    async executeDBQuery(upsertQuery) {
         return db.query(upsertQuery);
     }
 
@@ -55,12 +55,12 @@ class UpdatePreferenceService {
             error.isBadRequest = true;
             throw error;
         }
-        const upsertQuery = this.getUserCategoryUpsertQuery(preferencesObj);
+        const userCategoryUpsertQuery = this.getUserCategoryUpsertQuery(preferencesObj);
         const transaction = await db.transaction();
         try { 
             await Promise.all([
                 this.updateUserMeme(preferencesObj, transaction),
-                this.updateUserCategory(upsertQuery)
+                this.executeDBQuery(userCategoryUpsertQuery)
             ]);
             await transaction.commit();
             console.log("Transaction committed");

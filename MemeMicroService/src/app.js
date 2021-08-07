@@ -11,6 +11,6 @@ db.sync()
     });
 })
 .catch(err => { 
-    console.log(err);
-    console.log("SERVER STARTUP ERROR : " + err); 
+    console.log(err); 
+    console.log("SERVER STARTUP ERROR : " + err);
 });

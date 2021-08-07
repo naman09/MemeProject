@@ -1,4 +1,3 @@
-const { Router } = require("express");
 const { hash } = require('bcrypt');
 const CreateUserService = require("../services/CreateUser");
 const AuthUserService = require("../services/AuthUser");
@@ -17,8 +16,7 @@ const createUser = async (req, res, next) => {
         userObj.Password = hashedPassword;
         const results = await createUserServiceInstance.createUser(userObj);
         return res.status(200).send({
-            code: 200,
-            data: results
+           data: results
         });
     } catch(err) {
         console.log("Error in createUser");

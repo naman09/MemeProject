@@ -1,4 +1,4 @@
-const Sequelize=require('sequelize') ;
+const Sequelize = require('sequelize') ;
 require('dotenv').config();
 
 const { DataTypes } = require('sequelize');
@@ -12,23 +12,23 @@ const db = new Sequelize(path, {
 
 const User = db.define('User',{
     UserId:{
-        type:Sequelize.STRING,
+        type:DataTypes.STRING,
         primaryKey: true
     },
     Password:{
-        type:Sequelize.STRING,
+        type:DataTypes.STRING,
     }
 });
 
 //This table contains the Memes which user has liked.
 const UserMeme = db.define('UserMeme', {
     MemeId : { //Treated like a foreign key of Meme.MemeId
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
+        primaryKey: true,
         allowNull: false,
-        primaryKey: true
     },
     UserMemeLikeness: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
         validate: {
@@ -37,7 +37,7 @@ const UserMeme = db.define('UserMeme', {
         }
     },
     LastUpdatedAt: {
-        type: Sequelize.DATE, //DATETIME in mysql
+        type: DataTypes.DATE, //DATETIME in mysql
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         allowNull: false,
     }

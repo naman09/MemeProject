@@ -37,8 +37,8 @@ describe('Update User preferences',()=>{
             UserId: process.env.SAMPLE_USER_ID,
             MemeId: crypto.randomBytes(20).toString('hex'),
             NewMemeLikeness: 23,
-            CategoryIdList: randomIds //This Ids should not exists for this userId
-        }
+            CategoryIdList: randomIds //This Ids should not exists for this userId 
+        } 
 
         const res = await request(app)
         .put("/api/updatePreferences")

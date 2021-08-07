@@ -43,14 +43,14 @@ class CreateUserService {
                 Password: userObj.Password
             });
             user = user.dataValues;
-            await console.log(user) ;
+            console.log(user) ;
             if(user){
                 console.log("User created successfully");
                 return user;
             }
             else {
                 console.log("User creation failed");
-                const error = new Error("Insertion failed : " + err.message);
+                const error = new Error("Insertion failed : ");
                 error.isOperational = false;
                 throw error;
             }
