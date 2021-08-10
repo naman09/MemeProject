@@ -1,5 +1,7 @@
 const MemeUploaderService = require("../services/MemeUploader");
+const FetchTrendingMemesService = require("../services/FetchTrendingMemes");
 const memeUploaderServiceInstance = new MemeUploaderService();
+const fetchTrendingMemesServiceInstance = new FetchTrendingMemesService();
 const axios = require('axios');
 const constants = require('../constants');
 
@@ -76,12 +78,31 @@ const updatePreferences = async(req, res, next) => {
     }
 }
 
+/*
+    Input: pageNo, pageSize
+    Ouput: List of memes = { MemeId, MemeTitle, ActualData }
+*/
+const fetchTrendingMemes = async(req,res,next) => {
+    console.log("Inside fetchTrendingMemems");
+    try {
+        const memeList = await fetchTrendingMemesServiceInstance.fetchTrendingMemes(req.body.pageNo, req.body.pageSize);
+        res.status(200).send({
+            data: {
+                TrendingMemeList: memeList 
+            }
+        })
+    } catch (err) {
+        console.log("Error in fetchTrendingMemes");
+        next(err);
+    }
+}
+
 /*TODO:
 MemeUploader
 CategoryDeciderHelper
 UserPreferencesUpdater(??) 
 
-FetchRecentMemes
+FetchTrendingMemes
 MemeUpdater
 FetchRecommendedMemes
 */
@@ -89,5 +110,6 @@ FetchRecommendedMemes
 module.exports = {
     upload,
     updatePreferences,
-    categoryDeciderHelper
+    categoryDeciderHelper,
+    fetchTrendingMemes
 };
