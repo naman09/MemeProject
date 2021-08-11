@@ -8,7 +8,7 @@ describe("CreateUser Service",()=>{
         beforeAll( async () => {
            await db.sync();
         });
-        it("Is not null",() => {
+        xit("Is not null",() => {
             expect(CreateUserServiceInstance).not.toBeNUll ;
         });
     })

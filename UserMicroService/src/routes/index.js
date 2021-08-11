@@ -10,6 +10,6 @@ route.use('/checktoken',checkToken); //Just for testing purpose
 route.put('/updatePreferences',updatePreferences); //Internal function
 route.get('/userCategories/:UserId',getUserCategories) ;
 route.get('/favMemes/:UserId',getFavMemes) ;
-route.get('/memeLikeness/:UserId/:MemeId', getMemeLikeness); //TODO: should run lightning fast ⚡
+route.get('/memeLikeness', getMemeLikeness); //TODO: should run lightning fast ⚡
 
 module.exports =  route;

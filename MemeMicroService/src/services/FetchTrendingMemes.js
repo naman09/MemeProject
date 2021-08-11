@@ -10,19 +10,20 @@ class FetchTrendingMemes {
             throw new InputError("Invalid page parameters");
         } 
         try{
-            const memeList = Meme.findAll({
+            let memeList = await Meme.findAll({
+                limit: 100,
                 order:[
-                    ["LastUpdatedAt","ASC"],
-                    ["UserMemeLikeness",'DESC']
+                    ["UploadedAt","DESC"],
+                    ["TotalMemeLikeness",'DESC']
                 ]
             });
             memeList = memeList.map((meme) => ({
                 MemeId: meme.dataValues.MemeId,
                 MemeTitle: meme.dataValues.MemeTitle,
+                TotalMemeLikeness: meme.dataValues.TotalMemeLikeness,
                 ActualData: meme.dataValues.ActualData
             }));
             return memeList ;
-
         } catch (err) {
             throw new DBError(err) ;
         }

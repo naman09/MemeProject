@@ -9,7 +9,7 @@ describe('Create User',() => {
     });
     
 
-    it('should create a new user',async ()=>{
+    xit('should create a new user',async ()=>{
         const randomUserId = crypto.randomBytes(20).toString('hex');
         console.log(randomUserId,typeof(randomUserId));
         
@@ -23,7 +23,7 @@ describe('Create User',() => {
         expect(res.body.data).toHaveProperty('UserId') ;
         expect(res.body.data).toHaveProperty('Password');
     });
-    it('should give password validation error',async ()=>{
+    xit('should give password validation error',async ()=>{
         const res = await request(app)
         .post('/api/create')
         .send({
@@ -32,7 +32,7 @@ describe('Create User',() => {
         });
         expect(res.statusCode).toEqual(400) ;
     });
-    it('should give UserId already exist error',async ()=>{
+    xit('should give UserId already exist error',async ()=>{
         const res = await request(app)
         .post('/api/create')
         .send({

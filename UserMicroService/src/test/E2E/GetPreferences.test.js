@@ -10,14 +10,14 @@ describe('Get User preferences',()=>{
     const userId = process.env.SAMPLE_USER_ID;
     const memeId= process.env.SAMPLE_MEME_ID;
     
-    it('should get list of UserCategories id', async() => {
+    xit('should get list of UserCategories id', async() => {
         const res = await request(app)
         .get(`/api/userCategories/${userId}`)
         expect(res.statusCode).toEqual(200) ;
         expect(res.body.data.userCategories).not.toBeNull();
     });
 
-    it('should get list of UserMeme ids', async ()=>{
+    xit('should get list of UserMeme ids', async ()=>{
         const res = await request(app)
         .get(`/api/favMemes/${userId}`)
         expect(res.statusCode).toEqual(200);
@@ -30,12 +30,18 @@ describe("User Meme Likeness", () => {
         await db.sync();
     });
     const userId = process.env.SAMPLE_USER_ID;
-    const memeId= process.env.SAMPLE_MEME_ID;
+    const memeId = process.env.SAMPLE_MEME_ID;
 
-    it('should get memeLikeness', async ()=>{
+    it('should get list of userMemeLikeness', async ()=>{
         const res = await request(app)
-        .get(`/api/memeLikeness/${userId}/${memeId}`)
+        .get(`/api/memeLikeness`).send({
+          UserId: userId,
+          MemeIdList: [memeId]
+        });
         expect(res.statusCode).toEqual(200);
-        expect(res.body.data.memeLikeness).toEqual(23);
+        const memeLikeList = res.body.data;
+        if (memeLikeList.length) {
+          expect(res.body.data[0].UserMemeLikeness).toEqual(23);
+        } 
     });
 });

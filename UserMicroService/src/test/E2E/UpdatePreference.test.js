@@ -31,7 +31,7 @@ describe('Update User preferences',()=>{
         return  userCategory = userCategory[0].dataValues ;
     }
 
-    it("should insert into both UserMeme and UserCategory", async () => {
+    xit("should insert into both UserMeme and UserCategory", async () => {
         const randomIds = [1,2,3].map((i) => crypto.randomBytes(20).toString('hex'));
         const newPreferenceObj = {
             UserId: process.env.SAMPLE_USER_ID,
@@ -50,7 +50,7 @@ describe('Update User preferences',()=>{
         expect(userCategoryAfter.length).not.toEqual(0);
     });
 
-    it("should update both UserMeme and UserCategory", async () => {
+    xit("should update both UserMeme and UserCategory", async () => {
         const preferenceObj = {
             UserId: process.env.SAMPLE_USER_ID,
             MemeId: process.env.SAMPLE_MEME_ID,

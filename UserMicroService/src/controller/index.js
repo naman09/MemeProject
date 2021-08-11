@@ -1,9 +1,6 @@
 const { hash } = require('bcrypt');
-const CreateUserService = require("../services/CreateUser");
-const AuthUserService = require("../services/AuthUser");
-const UpdatePreferenceService = require("../services/UpdatePreference");
-const GetPreferencesService = require("../services/GetPreferences");
 const { getHashes } = require("crypto");
+const  { AuthUserService, CreateUserService, UpdatePreferenceService, GetPreferencesService } = require("../services");
 const createUserServiceInstance = new CreateUserService();
 const authUserServiceInstance = new AuthUserService();
 const updatePreferenceServiceInstance = new UpdatePreferenceService();
@@ -95,11 +92,9 @@ const getFavMemes = async (req, res, next) => {
 
 const getMemeLikeness = async (req, res, next) => {
     try {
-        const memeLikeness = await getPreferecesServiceInstance.getMemeLikeness(req.params.UserId, req.params.MemeId);
+        const result = await getPreferecesServiceInstance.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
         return res.status(200).send({
-            data: {
-                memeLikeness: memeLikeness 
-            }
+            data: result
         })
     } catch (err) {
         console.log("Error in getMemeLikeness");

@@ -22,7 +22,8 @@
     "mocha": "^9.0.2",
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.12",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "supertest": "^6.1.4"
   },
   "devDependencies": {
     "jest": "^27.0.6"

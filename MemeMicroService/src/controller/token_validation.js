@@ -14,6 +14,7 @@ module.exports = {
 
                 } else {
                     console.log("Token valid");
+                    console.log("Decode object : ", decoded);
                     next();
                 }
             });

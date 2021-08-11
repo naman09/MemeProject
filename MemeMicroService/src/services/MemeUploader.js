@@ -1,4 +1,5 @@
 const { Meme, db, MemeTag } = require('../models');
+const { InputError, DBError } = require('../errors');
 
 class MemeUploader{
     constructor(){}
@@ -88,10 +89,7 @@ class MemeUploader{
     async upload(memeObj){
         console.log("Inside upload");
         if (!this.validate(memeObj)) {
-            console.log("Invalid Meme Object");
-            const error = new Error("Invalid Meme Object");
-            error.isBadRequest = true;
-            throw error;
+            throw new InputError("Invalid Meme Object");
         }
         const tagUpsertQuery = this.getTagUpsertQuery(memeObj);
         console.log(tagUpsertQuery);
@@ -124,13 +122,7 @@ class MemeUploader{
             }
         } catch (err) {
             await transaction.rollback();
-            console.log("DB Error: " + err);
-            const error = new Error("DB Error:" + err);
-            if (String(err).search("Validation error") != -1) {
-                error.isBadRequest = true;
-            }
-            error.isOperational = true;
-            throw error;
+            throw new DBError(err);
         }
     }
 }
