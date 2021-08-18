@@ -6,7 +6,13 @@ const authUserServiceInstance = new AuthUserService();
 const updatePreferenceServiceInstance = new UpdatePreferenceService();
 const getPreferecesServiceInstance = new GetPreferencesService() ;
 
+const checkhealth = async (req, res, next) => {
+  res.status(200).send({
+    data:"User Micro Service working fine"
+  })
+}
 const createUser = async (req, res, next) => {
+  console.log("Inside create user");
     const userObj = req.body ;
     try{
         const hashedPassword = await hash(userObj.Password, 10);
@@ -113,6 +119,7 @@ route.put("/likeness/:MemeId/:UserId")
 route.get("/likeness/:MemeId/:UserId")
 */
 module.exports = {
+   checkhealth,
     createUser,
     login,
     updatePreferences,

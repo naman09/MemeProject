@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
+
+app.use(cors());
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.urlencoded({ extended: true }));
@@ -8,7 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/health', (req,res) => {
-    res.send("OK");
+    console.log("Inside health");
+    res.send("UserMicroService working fine :)");
 });
 
 app.use('/api',require('../routes'));

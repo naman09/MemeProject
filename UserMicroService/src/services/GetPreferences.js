@@ -84,7 +84,7 @@ class GetPreferences {
                 MemeId: meme.dataValues.MemeId,
                 UserMemeLikeness: meme.dataValues.UserMemeLikeness
             }));
-            return memeList;
+            return memeList; //return empty list 
         } catch(err) {
             throw new DBError(err);
         }

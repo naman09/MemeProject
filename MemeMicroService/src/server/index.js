@@ -9,7 +9,7 @@ app.use(express.json({limit: '50mb'}));
 
 
 app.use('/health', (req,res) => {
-    res.send("OK");
+    res.send("MemeMicroService running fine :)");
 });
 
 app.use('/api',require('../routes'));
