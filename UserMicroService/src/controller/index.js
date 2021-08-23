@@ -11,12 +11,11 @@ const checkhealth = async (req, res, next) => {
     data:"User Micro Service working fine"
   })
 }
+//TODO Hash password afterwards
 const createUser = async (req, res, next) => {
   console.log("Inside create user");
     const userObj = req.body ;
     try{
-        const hashedPassword = await hash(userObj.Password, 10);
-        userObj.Password = hashedPassword;
         const results = await createUserServiceInstance.createUser(userObj);
         return res.status(200).send({
            data: results
@@ -29,83 +28,83 @@ const createUser = async (req, res, next) => {
 }
 
 const login = async (req, res, next) => { 
-    console.log("Inside login");
-    try {
-        const result = await authUserServiceInstance.login(req.body.UserId, req.body.Password);
-        if (result) {
-            res.status(200).send({
-                data: {
-                    token: result
-                }
-            });
-        } else {
-            const error = new Error("Invalid UserId or Passsword");
-            error.isBadRequest = true;
-            throw error ;
-        }
-    } catch(err){
-        console.log("Error in login");   
-        next(err);
-    }
+  console.log("Inside login");
+  try {
+      const result = await authUserServiceInstance.login(req.body.UserId, req.body.Password);
+      if (result) {
+          res.status(200).send({
+              data: {
+                  token: result
+              }
+          });
+      } else {
+          const error = new Error("Invalid UserId or Passsword");
+          error.isBadRequest = true;
+          throw error ;
+      }
+  } catch(err){
+      console.log("Error in login");   
+      next(err);
+  }
 }
 
 //TODO: it is like an internal function to be used by MemeMicro service
 const updatePreferences =  async (req, res, next) => {
-    console.log("Inside updatePreferences")
-    const preferencesObj = req.body;
-    try {
-        await updatePreferenceServiceInstance.updateUserPreferences(preferencesObj);
-        return res.status(200).send({
-            data : {
-                message:"User preferences updated successfully"
-            }
-        });
-    } catch (err) {
-        console.log("Error in updatePreferences");
-        next(err);
-    }
+  console.log("Inside updatePreferences")
+  const preferencesObj = req.body;
+  try {
+      await updatePreferenceServiceInstance.updateUserPreferences(preferencesObj);
+      return res.status(200).send({
+          data : {
+              message:"User preferences updated successfully"
+          }
+      });
+  } catch (err) {
+      console.log("Error in updatePreferences");
+      next(err);
+  }
 }
 
 const getUserCategories = async (req, res, next) => {
-    try{
-        const categoryIdList=await getPreferecesServiceInstance.getUserCategories(req.params.UserId);
-        return res.status(200).send({
-            data: {
-                userCategories: categoryIdList 
-            }
-        })
-        
-    } catch(err){
-        console.log("Error in getUserCategories");
-        next(err) ;
-    }
+  try{
+      const categoryIdList=await getPreferecesServiceInstance.getUserCategories(req.params.UserId);
+      return res.status(200).send({
+          data: {
+              userCategories: categoryIdList 
+          }
+      })
+      
+  } catch(err){
+      console.log("Error in getUserCategories");
+      next(err) ;
+  }
 }
 
 const getFavMemes = async (req, res, next) => {
-    console.log("Inside getFavMemes");
-    try{
-        const memeList = await getPreferecesServiceInstance.getFavMemes(req.params.UserId);
-        return res.status(200).send({
-            data:{
-                favMemes: memeList 
-            }
-        });
-    } catch(err){
-        console.log("Error in getFavMemes");
-        next(err);
-    }
+  console.log("Inside getFavMemes");
+  try{
+      const memeList = await getPreferecesServiceInstance.getFavMemes(req.params.UserId);
+      return res.status(200).send({
+          data:{
+              favMemes: memeList 
+          }
+      });
+  } catch(err){
+      console.log("Error in getFavMemes");
+      next(err);
+  }
 }
 
 const getMemeLikeness = async (req, res, next) => {
-    try {
-        const result = await getPreferecesServiceInstance.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
-        return res.status(200).send({
-            data: result
-        })
-    } catch (err) {
-        console.log("Error in getMemeLikeness");
-        next(err);
-    } 
+  try {
+      const result = await getPreferecesServiceInstance.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
+      return res.status(200).send({
+          data: result
+      })
+  } catch (err) {
+      console.log("Error in getMemeLikeness");
+      next(err);
+  } 
 }
 
 

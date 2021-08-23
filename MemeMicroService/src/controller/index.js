@@ -3,23 +3,46 @@ const memeUploaderServiceInstance = new MemeUploaderService();
 const fetchTrendingMemesServiceInstance = new FetchTrendingMemesService();
 const axios = require('axios');
 const constants = require('../constants');
+const fs = require('fs');
+
+const uploadFile = async (req, res, next) => {
+  console.log("Inside upload file");
+  console.log("Requestfile" , req.body);
+  const imageTmp = req.files.image;
+  const imageData = imageTmp.data; 
+  fs.writeFile(`./src/server/media/${imageTmp.name}`,imageData, (err) => {
+  if (err)
+    console.log(err);
+  else {
+    console.log("File written successfully\n");
+    console.log("The written has the following contents:");
+  }});
+  res.send("COOL");
+}
 
 /*
-    Input: MemeTitle, ActualData, UploadedBy, TagList
+Stores media 
+    generates media name, media path
+    */
+
+/*
+    Input: MemeTitle, UploadedBy, TagString
     Output: MemeId --> This should be unique
 */
 const upload = async (req, res, next) => {
   console.log("Inside uploadMeme");
   try {
-    const memeId = await memeUploaderServiceInstance.upload(req.body);
+    console.log(req.body);
+    console.log(req.files.mediaFile);
+    // console.log(req.files);
+    const memeObj = req.body;
+    const result = await memeUploaderServiceInstance.upload(memeObj, req.files.mediaFile);
     // if (memeId) {
     //     req.body.MemeId = memeId;
     //     next();
     // }
     res.status(200).send({
-      data: {
-        message: "Work in progress"
-      }
+      data: result
     });
   } catch (err) {
     console.log("Error in upload");
@@ -44,7 +67,6 @@ const categoryDeciderHelper = async (req, res, next) => { //TODO: need to test
     next(err);
   }
 }
-
 
 /*
     Input: UserId, MemeId, NewMemeLikeness, CategoryIdList
@@ -105,7 +127,6 @@ const fetchTrending = async (req, res, next) => {
   //just fetchtrenfingmemes
 }
 
-
 /*
   Input: UserId, pageNo, pageSize
   Output: List of memes
@@ -141,5 +162,6 @@ module.exports = {
   upload,
   updatePreferences,
   categoryDeciderHelper,
-  fetchTrendingMemes
+  fetchTrendingMemes,
+  uploadFile //just for testing
 };

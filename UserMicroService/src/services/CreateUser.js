@@ -1,4 +1,6 @@
 const { User } = require('../models');
+const { hash } = require('bcrypt');
+const { getHashes } = require("crypto");
 
 /*
     Create user in the database after validating it
@@ -38,6 +40,8 @@ class CreateUserService {
             throw error ;
         }
         try{
+            const hashedPassword = await hash(userObj.Password, 10);
+            userObj.Password = hashedPassword;
             let user = await User.create({
                 UserId: userObj.UserId,
                 Password: userObj.Password
