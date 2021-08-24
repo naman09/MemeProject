@@ -12,6 +12,7 @@ const checkhealth = async (req, res, next) => {
   })
 }
 //TODO Hash password afterwards
+
 /*
   Input: userObj
   Output: data of new user
@@ -110,7 +111,7 @@ const getFavMemes = async (req, res, next) => {
       const memeIdList = await getPreferecesServiceInstance.getFavMemes(req.params.UserId);
       return res.status(200).send({
           data:{
-              favMemes: memeIdList 
+              favMemes: memeIdList
           }
       });
   } catch(err){
