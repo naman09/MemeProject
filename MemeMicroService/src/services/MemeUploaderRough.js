@@ -14,39 +14,49 @@ class MemeUploader{
         return false;
     }
     if (typeof(memeObj.UploadedBy) !== "string") { //TODO: No need to check for undefined
-        console.log("UploadedBy expected string found " + typeof(memeObj.UploadedBy));
+        console.log("UploadedBy is not string");
         return false;
     }
     if (typeof(memeObj.MemeTitle) !== "string") {
-        console.log("MemeTitle expected string found " + typeof(memeObj.MemeTitle));
+        console.log("MemeTitle is not string");
         return false;
     }
     if (typeof(memeObj.TagString) !== "string") {
-        console.log("TagString expected string found " + typeof(memeObj.TagString));
+        console.log("TagString is not string");
         return false;
     }
     return true;
   }
-  
-  getTagUpsertQuery(tagList){
-    const rows = tagList.map((tagName)=>{
+  getTagRows(tagList){
+    return tagList.map((tagName)=>{
         return `('${tagName}',1)` ;
     }).join();
+  }
+  getTagUpsertQuery(tagList){
+    const rows = this.getTagRows(tagList);
     const queryString = `INSERT INTO Tags
     (TagName, MemeCount) VALUES ${rows}
     ON DUPLICATE KEY UPDATE MemeCount=MemeCount+1`;
-    console.log("RAW QUERY : " + queryString);
     return queryString;
   }
-
+  async executeDBQuery(queryString){
+    return db.query(queryString);
+  }
+  getMemeTagValues(memeId, tagList) {
+    return tagList.map((tagName) => {
+        return { MemeId: memeId, TagName: tagName} 
+    });
+  }
+  getMemeCategoryValues(memeId, categoryIdList) {
+    return categoryIdList.map((categoryId) => {
+        return { MemeId: memeId, CategoryId: categoryId }
+    });
+  }
   async uploadMemeTag(values, transaction){
     return MemeTag.bulkCreate(values, { transaction: transaction }) ;
   }
-  
   async uploadMemeCategory(memeId, categoryIdList){
-    const values = categoryIdList.map((categoryId) => {
-        return { MemeId: memeId, CategoryId: categoryId }
-    });
+    const values = this.getMemeCategoryValues(memeId, categoryIdList);
     try {
         const result = await MemeCategory.bulkCreate(values);
         return 1;
@@ -61,10 +71,9 @@ class MemeUploader{
     }
   }
 
-  async uploadMeme(memeObj, transaction) {
-    console.log("Storing meme in DB");
+  async uploadMeme(memeId, memeObj,transaction) {
     return Meme.create({
-        MemeId: memeObj.MemeId,
+        MemeId: memeId,
         MediaPath: memeObj.MediaPath,
         MediaName: memeObj.MediaName,
         MemeTitle: memeObj.MemeTitle,
@@ -76,7 +85,7 @@ class MemeUploader{
     console.log("Storing media");
     const mediaData = media.data; 
     try {
-      await fs.writeFile(MEDIA_BASE_URL + mediaPath, mediaData); //No need of await
+      await fs.writeFile(mediaPath, mediaData);
       console.log("File written successfully\n");
     } catch(err) {
       console.log(err);
@@ -85,14 +94,12 @@ class MemeUploader{
     return media.name;
   }
 
-  constructMemeObj(memeObj, media){
-    memeObj.TagList = memeObj.TagString.split(",").map((tag) => tag.trim());
-    const currentTimestamp = String(Math.round(new Date().getTime()/1000));
-    const memeId = memeObj.UploadedBy + currentTimestamp ; //UserId + TIMESTAMP
-    memeObj.MediaName = media.name;
-    memeObj.MediaPath = memeId + media.name; //TODO: REmove in future
-    memeObj.MemeId = memeId;
-    console.log("MemeId generated : " + memeId);
+  getTagList(tagString) {
+    return tagString.split(",").map((tag) => tag.trim());
+  };
+
+  constructMemeObj(memeObj,media){
+    
   }
 
   //Upload Meme, Tag, MemeTag
@@ -101,31 +108,35 @@ class MemeUploader{
     if (!this.validate(memeObj)) {
         throw new InputError("Invalid Meme Object");
     }
-    this.constructMemeObj(memeObj, media);
+
+    memeObj.TagList = this.getTagList(memeObj.TagString);
     const tagUpsertQuery = this.getTagUpsertQuery(memeObj.TagList);
-    const memeTagValues = memeObj.TagList.map((tagName) => {
-        return { MemeId: memeObj.MemeId, TagName: tagName} 
-    });
+    console.log(tagUpsertQuery);
+
+    const currentTimestamp = String(Math.round(new Date().getTime()/1000));
+    const memeId = memeObj.UploadedBy + currentTimestamp ; //UserId + TIMESTAMP
+    memeObj.MediaName = media.name;
+    memeObj.MediaPath = MEDIA_BASE_URL + memeId + media.name;
+    console.log("MemeId generated : " + memeId);
+    const memeTagValues = this.getMemeTagValues(memeId, memeObj.TagList) ;
     console.log("Meme Tag Values", memeTagValues);
 
     const transaction = await db.transaction();
     try {
-        console.log("Transaction started");
         const result = await Promise.all([
-            this.uploadMeme(memeObj, transaction),
-            db.query(tagUpsertQuery),
+            this.uploadMeme(memeId, memeObj, transaction),
+            this.executeDBQuery(tagUpsertQuery),
             this.storeMedia(media, memeObj.MediaPath)
         ]);
-        console.log("Upload meme and tag sucessful!");
         await this.uploadMemeTag(memeTagValues, transaction);
-        console.log("Upload memeTag successful!");
         await transaction.commit();
         console.log("Transaction committed");
+        
         const meme = result[0].dataValues;
-        console.log(meme);
+        // console.log(meme);
         if (meme) {
             console.log("Meme uploaded successfully");
-            return { MemeId: meme.MemeId, MediaPath: meme.MediaPath };
+            return meme.MemeId;
         } else {
             console.log("Meme upload failed");
             const error = new Error("Upload failed");

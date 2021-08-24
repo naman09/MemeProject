@@ -41,7 +41,7 @@ describe('Update User preferences',()=>{
         } 
 
         const res = await request(app)
-        .put("/api/updatePreferences")
+        .put("/api/updateUserPreferences")
         .send(newPreferenceObj);
         
         const userMemeAfter = await getUserMeme(newPreferenceObj);

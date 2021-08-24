@@ -17,9 +17,14 @@ const Meme = db.define('Meme', {
         type: DataTypes.STRING,
         primaryKey: true,
     },
-    ActualData: {
-        type: DataTypes.BLOB('long'),
+    MediaPath: {
+        type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
+    },
+    MediaName: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     MemeTitle: {
         type: DataTypes.STRING,

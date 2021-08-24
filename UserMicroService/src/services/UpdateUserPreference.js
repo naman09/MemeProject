@@ -1,20 +1,35 @@
 const { UserCategory, UserMeme,db } = require('../models');
 const { Op, literal, INTEGER, query } = require('sequelize');
 
-class UpdatePreference {
+class UpdateUserPreference {
     constructor() {}
 
     validatePreferencesObject(preferencesObj){
         if (!preferencesObj) return false;
         if (typeof(preferencesObj.MemeId) !== "string") {
-            con
+            console.log("MemeId expected string found " + typeof(preferencesObj.MemeId));
             return false ;
         }
-        if (typeof(preferencesObj.UserId) !== "string") return false ;
-        if (typeof(preferencesObj.NewMemeLikeness) !== "number") return false ;
-        if (!preferencesObj.CategoryIdList) return false ;
-        if (!preferencesObj.CategoryIdList.length) return false ;
-        if (typeof(preferencesObj.CategoryIdList[0]) !== "string") return false ;
+        if (typeof(preferencesObj.UserId) !== "string") {
+          console.log("UserId expected string found " + typeof(preferencesObj.UserId));
+          return false ;
+        }
+        if (typeof(preferencesObj.NewMemeLikeness) !== "number") {
+          console.log("NewMemeLikeness expected number found " + typeof(preferencesObj.NewMemeLikeness));
+          return false ;
+        }
+        if (!preferencesObj.CategoryIdList) {
+          console.log("CategoryIdList can not be undefined");
+          return false ;
+        }
+        if (!preferencesObj.CategoryIdList.length) {
+          console.log("CategoryIdList expected non empty");
+          return false ;
+        }
+        if (typeof(preferencesObj.CategoryIdList[0]) !== "string") {
+          console.log("CategoryId expected string found " + typeof(preferencesObj.CategoryIdList[0]));
+          return false ;
+        }
         return true ;
     }
     
@@ -78,4 +93,4 @@ class UpdatePreference {
     }
 }
 
-module.exports = UpdatePreference;
+module.exports = UpdateUserPreference;

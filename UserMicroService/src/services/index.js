@@ -1,12 +1,12 @@
 const AuthUserService = require("./AuthUser");
 const CreateUserService = require("./CreateUser");
-const UpdatePreferenceService = require("./UpdatePreference");
+const UpdateUserPreferenceService = require("./UpdateUserPreference");
 const GetPreferencesService = require("./GetPreferences");
 
 
 module.exports = {
   AuthUserService,
   CreateUserService,
-  UpdatePreferenceService,
+  UpdateUserPreferenceService,
   GetPreferencesService
 };

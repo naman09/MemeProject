@@ -6,4 +6,3 @@ USER SERVICE
 
 * Yourmemes
 * GiggleYou
-* git 

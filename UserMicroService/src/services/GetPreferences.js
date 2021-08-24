@@ -18,6 +18,7 @@ class GetPreferences {
         return true;
     }
     validateIdList(idList){
+      console.log("Validating list");
       if(!idList){
         console.log("IdList undefined");
         return false;
@@ -80,11 +81,11 @@ class GetPreferences {
                 }
             }); 
     
-            memeList = memeList.map(meme=>({
+            const memeIdLikenessList = memeList.map(meme=>({
                 MemeId: meme.dataValues.MemeId,
                 UserMemeLikeness: meme.dataValues.UserMemeLikeness
             }));
-            return memeList; //return empty list 
+            return memeIdLikenessList; //return empty list 
         } catch(err) {
             throw new DBError(err);
         }
