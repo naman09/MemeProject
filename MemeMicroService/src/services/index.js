@@ -1,5 +1,13 @@
-FetchRecommendedMemesService = require('./FetchRecommendedMemes');
-FetchTrendingMemesService = require('./FetchTrendingMemes');
-MemeUploaderService = require('./MemeUploader');
+FetchRecommendedMemesSVC = require('./FetchRecommendedMemes');
+FetchTrendingMemesSVC = require('./FetchTrendingMemes');
+MemeUploaderSVC = require('./MemeUploader');
+LikeUpdaterSVC = require('./LikeUpdater');
+CategoryUploaderSVC = require('./CategoryUploader');
 
-module.exports = { FetchRecommendedMemesService , FetchTrendingMemesService , MemeUploaderService };
+module.exports = { 
+  FetchRecommendedMemesSVC, 
+  FetchTrendingMemesSVC, 
+  MemeUploaderSVC, 
+  LikeUpdaterSVC,
+  CategoryUploaderSVC
+};

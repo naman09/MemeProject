@@ -5,7 +5,7 @@ const { DBError , InputError } = require('../errors')
 class GetPreferences {
     constructor() {}
 
-    // TODO Write one common function for validation 
+    //TODO write proper validation function to know which field created problem
     validateId(id) {
         if (!id) {
           console.log("Id undefined");

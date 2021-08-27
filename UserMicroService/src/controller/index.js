@@ -1,17 +1,13 @@
 const { hash } = require('bcrypt');
 const { getHashes } = require("crypto");
-const  { AuthUserService, CreateUserService, UpdateUserPreferenceService, GetPreferencesService } = require("../services");
-const createUserServiceInstance = new CreateUserService();
-const authUserServiceInstance = new AuthUserService();
-const updateUserPreferenceServiceInstance = new UpdateUserPreferenceService();
-const getPreferecesServiceInstance = new GetPreferencesService() ;
+const  { AuthUserSVC, CreateUserSVC, UpdateUserPreferenceSVC, GetPreferencesSVC } = require("../services");
+const createUserSVC = new CreateUserSVC();
+const authUserSVC = new AuthUserSVC();
+const updateUserPreferenceSVC = new UpdateUserPreferenceSVC();
+const getPreferecesSVC = new GetPreferencesSVC() ;
 
-const checkhealth = async (req, res, next) => {
-  res.status(200).send({
-    data:"User Micro Service working fine"
-  })
-}
-//TODO Hash password afterwards
+//TODO Hash password afterwards (DONE)
+
 /*
   Input: userObj
   Output: data of new user
@@ -20,7 +16,7 @@ const createUser = async (req, res, next) => {
   console.log("Inside create user");
     const userObj = req.body ;
     try{
-        const results = await createUserServiceInstance.createUser(userObj);
+        const results = await createUserSVC.createUser(userObj);
         return res.status(200).send({
            data: results
         });
@@ -39,7 +35,7 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => { 
   console.log("Inside login");
   try {
-      const result = await authUserServiceInstance.login(req.body.UserId, req.body.Password);
+      const result = await authUserSVC.login(req.body.UserId, req.body.Password);
       if (result) {
           res.status(200).send({
               data: {
@@ -67,7 +63,7 @@ const updateUserPreferences =  async (req, res, next) => {
   console.log("Inside updateUserPreferences")
   const preferencesObj = req.body;
   try {
-      await updateUserPreferenceServiceInstance.updateUserPreferences(preferencesObj);
+      await updateUserPreferenceSVC.updateUserPreferences(preferencesObj);
       return res.status(200).send({
           data : {
               message:"User preferences updated successfully"
@@ -86,7 +82,7 @@ const updateUserPreferences =  async (req, res, next) => {
 const getUserCategories = async (req, res, next) => {
   console.log("Inside getUserCategories controller");
   try{
-      const categoryIdList=await getPreferecesServiceInstance.getUserCategories(req.params.UserId);
+      const categoryIdList=await getPreferecesSVC.getUserCategories(req.params.UserId);
       return res.status(200).send({
           data: {
               userCategories: categoryIdList 
@@ -107,10 +103,10 @@ const getUserCategories = async (req, res, next) => {
 const getFavMemes = async (req, res, next) => {
   console.log("Inside getFavMemes");
   try{
-      const memeIdList = await getPreferecesServiceInstance.getFavMemes(req.params.UserId);
+      const memeIdList = await getPreferecesSVC.getFavMemes(req.params.UserId);
       return res.status(200).send({
           data:{
-              favMemes: memeIdList 
+              favMemes: memeIdList
           }
       });
   } catch(err){
@@ -128,7 +124,7 @@ const getMemeLikeness = async (req, res, next) => {
   console.log("Inside getMemeLikeness controller");
   console.log(req.body)
   try {
-      const memeIdLikenessList = await getPreferecesServiceInstance.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
+      const memeIdLikenessList = await getPreferecesSVC.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
       return res.status(200).send({
           data: memeIdLikenessList
       })
@@ -146,7 +142,7 @@ const updateMemeLikeness = async(req, res, next) => {
   console.log("Inside updateMemeLikeness controller");
   try {
       //Update Meme, CategoryActivity Tables --> Call to MemeMicroService 
-      const result = await getPreferecesServiceInstance.updatePreferences(req.body);
+      const result = await 
   } catch(err) {
     console.log("Error in updateMemeLikeness controller");
     next(err);
@@ -164,7 +160,6 @@ route.put("/likeness/:MemeId/:UserId")
 route.get("/likeness/:MemeId/:UserId")
 */
 module.exports = {
-   checkhealth,
     createUser,
     login,
     updateUserPreferences,

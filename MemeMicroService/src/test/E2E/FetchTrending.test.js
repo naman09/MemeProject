@@ -11,7 +11,7 @@ describe('Fetch trending memes test', () => {
         await db.sync();
     });
 
-    it('should get memes',async() => {
+    xit('should get memes',async() => {
         const res = await request(app)
         .get('/api/fetchTrendingMemes/')
         .send({

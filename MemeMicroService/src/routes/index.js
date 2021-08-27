@@ -10,4 +10,6 @@ route.get("/fetchTrendingMemes",fetchTrendingMemes)
 route.post("/uploadFile", uploadFile);
 
 
+//TODO: change upload to uploadMeme
+
 module.exports =  route;

@@ -32,7 +32,7 @@ describe("User Meme Likeness", () => {
     const userId = process.env.SAMPLE_USER_ID;
     const memeId = process.env.SAMPLE_MEME_ID;
 
-    it('should get list of userMemeLikeness', async ()=>{
+    xit('should get list of userMemeLikeness', async ()=>{
         const res = await request(app)
         .get(`/api/memeLikeness`).send({
           UserId: userId,

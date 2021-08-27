@@ -1,10 +1,11 @@
-const { Meme, db, MemeTag } = require('../models');
+const { Meme, db, MemeTag, MemeCategory } = require('../models');
 const { InputError, DBError } = require('../errors');
 const { MEDIA_BASE_URL,  } = require('../constants');
 const fs = require('fs/promises');
 const { existsSync } = require('fs'); //Could be optimized
 
-class MemeUploader{
+// TODO Update CategoryActivity
+class MemeUploader {
   constructor(){}
 
   validate(memeObj) {
@@ -41,24 +42,6 @@ class MemeUploader{
 
   async uploadMemeTag(values, transaction){
     return MemeTag.bulkCreate(values, { transaction: transaction }) ;
-  }
-  
-  async uploadMemeCategory(memeId, categoryIdList){
-    const values = categoryIdList.map((categoryId) => {
-        return { MemeId: memeId, CategoryId: categoryId }
-    });
-    try {
-        const result = await MemeCategory.bulkCreate(values);
-        return 1;
-    } catch (err) {
-        console.log("DB Error: " + err);
-        const error = new Error("DB Error:" + err);
-        if (String(err).search("Validation error") != -1) {
-            error.isBadRequest = true;
-        }
-        error.isOperational = true;
-        throw error;
-    }
   }
 
   async uploadMeme(memeObj, transaction) {
