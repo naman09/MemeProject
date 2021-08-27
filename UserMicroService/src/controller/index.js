@@ -6,7 +6,6 @@ const authUserSVC = new AuthUserSVC();
 const updateUserPreferenceSVC = new UpdateUserPreferenceSVC();
 const getPreferecesSVC = new GetPreferencesSVC() ;
 
-//TODO Hash password afterwards (DONE)
 
 /*
   Input: userObj
@@ -63,6 +62,7 @@ const updateUserPreferences =  async (req, res, next) => {
   console.log("Inside updateUserPreferences")
   const preferencesObj = req.body;
   try {
+
       await updateUserPreferenceSVC.updateUserPreferences(preferencesObj);
       return res.status(200).send({
           data : {
