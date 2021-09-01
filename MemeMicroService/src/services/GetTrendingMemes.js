@@ -1,7 +1,7 @@
 const { Meme } = require('../models');
 const { InputError, DBError } = require('../errors');
 
-class FetchTrendingMemes {
+class GetTrendingMemes {
     constructor() {}
 
     async fetchTrendingMemes(pageNo, pageSize) {
@@ -31,4 +31,4 @@ class FetchTrendingMemes {
     }
 }
 
-module.exports = FetchTrendingMemes;
+module.exports = GetTrendingMemes;

@@ -1,6 +1,7 @@
-const { MemeUploaderSVC , FetchTrendingMemesSVC, LikeUpdaterSVC } = require('../services');
+const { MemeUploaderSVC , GetTrendingMemesSVC, LikeUpdaterSVC, CategoryUploaderSVC } = require('../services');
 const memeUploaderSVC = new MemeUploaderSVC();
-const fetchTrendingMemesSVC = new FetchTrendingMemesSVC();
+const getTrendingMemesSVC = new GetTrendingMemesSVC();
+const categoryUploaderSVC = new CategoryUploaderSVC();
 const likeUpdaterSVC = new LikeUpdaterSVC();
 const axios = require('axios');
 const constants = require('../constants');
@@ -27,6 +28,7 @@ const likeUpdater = async(req, res, next) => {
 
 //TODO : SVC to convert a MemeId to CategoryIdList
 
+//TODO: delete this (POC purpose)
 const uploadFile = async (req, res, next) => {
   console.log("Inside uploadFile controller");
   console.log("Requestfile" , req.body);
@@ -73,10 +75,10 @@ const upload = async (req, res, next) => {
   }
 }
 
-//upload, categoryDeciderHelper (In turn calls Category_MS), updatePreferences 
+//upload, categoryDeciderHelper (In turn calls Category_MS), updateUserPreferences 
 
 /*
-    Input : MemeActualData + TagList
+    Input : MemeActualData + TagList //TODO: Could give URL also instead of ActualData
     Output : List of CategoryIds --> Put them in request object
 */
 const categoryDeciderHelper = async (req, res, next) => { //TODO: need to test
@@ -84,7 +86,7 @@ const categoryDeciderHelper = async (req, res, next) => { //TODO: need to test
   try {
     // Call CategoryMicroService to get CategoryIdList of a particular Meme 
     req.body.CategoryIdList = ["1", "2", "3"];
-    const result = await memeUploaderSVC.upload(req.body.MemeId, req.body.CategoryIdList);
+    const result = await categoryUploaderSVC.upload(req.body.MemeId, req.body.CategoryIdList);
     if (result) {
       next();
     }
@@ -99,11 +101,11 @@ const categoryDeciderHelper = async (req, res, next) => { //TODO: need to test
     Input: UserId, MemeId, NewMemeLikeness, CategoryIdList
     Output: Success Message
 */
-const updatePreferences = async (req, res, next) => {
-  console.log("Inside updateUserPreferences controller");
+const userPreferenceUpdater = async (req, res, next) => {
+  console.log("Inside userPreferenceUpdater controller");
   try {
     const baseUrl = 'http://localhost:5555';
-    const result = await axios.put(baseUrl + '/api/updateUserPreferences', {
+    const result = await axios.put(baseUrl + '/api/userPreferenceUpdater', {
       UserId: req.body.UserId,
       MemeId: req.body.MemeId,
       NewMemeLikeness: constants.NEW_MEME_LIKENESS_DEFAULT, //User will like the meme which he uploads
@@ -122,7 +124,7 @@ const updatePreferences = async (req, res, next) => {
 
     }
   } catch (err) {
-    console.log("Error in updatePreferences controller");
+    console.log("Error in userPreferenceUpdater controller");
     next(err);
   }
 }
@@ -131,17 +133,17 @@ const updatePreferences = async (req, res, next) => {
     Input: pageNo, pageSize
     Ouput: List of memes = { MemeId, MemeTitle, ActualData }
 */
-const fetchTrendingMemes = async (req, res, next) => {
+const getTrendingMemes = async (req, res, next) => {
   console.log("Inside fetchTrendingMemems controller");
   try {
-    const memeList = await fetchTrendingMemesSVC.fetchTrendingMemes(req.body.pageNo, req.body.pageSize);
+    const memeList = await getTrendingMemesSVC.getTrendingMemes(req.body.pageNo, req.body.pageSize);
     res.status(200).send({
       data: {
         TrendingMemeList: memeList
       }
     });
   } catch (err) {
-    console.log("Error in fetchTrendingMemes controller");
+    console.log("Error in getTrendingMemes controller");
     next(err);
   }
 }
@@ -176,21 +178,28 @@ const fetchRecommendedMemes = async (req, res, next) => {
   }
 }
 
+/*
+  UseCases: 1.) If user like/dislike a meme, we need to get categoryIdList for that meme,
+  and update CategoryActivity. 
+*/
+const getCategoriesForMeme = async (req, res, next) => {
+
+}
 /*TODO:
 MemeUploader
 CategoryDeciderHelper
 UserPreferencesUpdater(??) 
-FetchTrendingMemes
+getTrendingMemes
 
-MemeUpdater
+LikeUpdater
 FetchRecommendedMemes
 */
 
 module.exports = {
   upload,
-  updatePreferences,
+  userPreferenceUpdater,
   categoryDeciderHelper,
-  fetchTrendingMemes,
+  getTrendingMemes,
   uploadFile, //just for testing
   likeUpdater
 };

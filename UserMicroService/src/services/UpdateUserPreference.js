@@ -33,7 +33,7 @@ class UpdateUserPreference {
         return true ;
     }
     
-    async updateUserMeme(preferencesObj, transaction) {
+    async upsertUserMeme(preferencesObj, transaction) {
         const date = new Date();
         return UserMeme.upsert({
             MemeId: preferencesObj.MemeId,
@@ -62,8 +62,8 @@ class UpdateUserPreference {
         return db.query(upsertQuery);
     }
 
-    async updateUserPreferences(preferencesObj) { 
-        console.log("Inside updateUserPreferences");
+    async updateUserPreference(preferencesObj) { 
+        console.log("Inside updateUserPreference");
         if (!this.validatePreferencesObject(preferencesObj)) {
             console.log("Invalid preferences object");
             const error = new Error("Error in preference object");
@@ -74,7 +74,7 @@ class UpdateUserPreference {
         const transaction = await db.transaction();
         try { 
             await Promise.all([
-                this.updateUserMeme(preferencesObj, transaction),
+                this.upsertUserMeme(preferencesObj, transaction),
                 this.executeDBQuery(userCategoryUpsertQuery)
             ]);
             await transaction.commit();

@@ -41,21 +41,9 @@ class CategoryUploader {
     return MemeCategory.bulkCreate(values, {transaction: transaction});
   }
 
-  getCategoryActivityUpsertQuery(categoryIdList){
-    const values = categoryIdList.map((categoryId)=>{
-        return `('${categoryId}', 0, 0)` ;
-    }).join();
-    const queryString = `INSERT INTO CategoryActivity
-    (CategoryId, TotalCategoryLikeness, AllUsersCategoryActivityCount) VALUES ${rows}
-    ON DUPLICATE KEY UPDATE TotalCategoryLikeness=TotalCategoryLikeness+100,
-    `;
-    console.log("RAW QUERY : " + queryString);
-    return queryString;
-  }
-
   async uploadCategoryActivity(categoryIdList, transaction) {
     const values = categoryIdList.map((categoryId) => (
-      {CategoryId: categoryId, TotalCategoryLikeness: 0, AllUsersCategoryActivityCount: 0}
+      { CategoryId: categoryId, TotalCategoryLikeness: 0, AllUsersCategoryActivityCount: 0 }
     ));
     return CategoryActivity.bulkCreate(values,{ignoreDuplicates:true, transaction: transaction});
   }
@@ -69,9 +57,8 @@ class CategoryUploader {
     // const categoryActivityUpsertQuery = this.getCategoryActivityUpsertQuery(categoryIdList);
     const transaction = await db.transaction();
     try{
-      // await db.query(categoryActivityUpsertQuery);
       await this.uploadCategoryActivity(categoryIdList, transaction);
-      //await this.uploadMemeCategory(memeId,categoryIdList,transaction);
+      await this.uploadMemeCategory(memeId,categoryIdList, transaction);
       await transaction.commit();
     } catch(err) {
       await transaction.rollback();

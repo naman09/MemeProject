@@ -4,9 +4,8 @@ const  { AuthUserSVC, CreateUserSVC, UpdateUserPreferenceSVC, GetPreferencesSVC 
 const createUserSVC = new CreateUserSVC();
 const authUserSVC = new AuthUserSVC();
 const updateUserPreferenceSVC = new UpdateUserPreferenceSVC();
-const getPreferecesSVC = new GetPreferencesSVC() ;
+const getPreferencesSVC = new GetPreferencesSVC();
 
-//TODO Hash password afterwards (DONE)
 
 /*
   Input: userObj
@@ -59,11 +58,12 @@ const login = async (req, res, next) => {
   Input : UserId, MemeId, NewMemeLikeness, CategoryIdList
   Output: Success/Failure
 */
-const updateUserPreferences =  async (req, res, next) => {
+const updateUserPreference =  async (req, res, next) => {
   console.log("Inside updateUserPreferences")
   const preferencesObj = req.body;
   try {
-      await updateUserPreferenceSVC.updateUserPreferences(preferencesObj);
+
+      await updateUserPreferenceSVC.updateUserPreference(preferencesObj);
       return res.status(200).send({
           data : {
               message:"User preferences updated successfully"
@@ -82,7 +82,7 @@ const updateUserPreferences =  async (req, res, next) => {
 const getUserCategories = async (req, res, next) => {
   console.log("Inside getUserCategories controller");
   try{
-      const categoryIdList=await getPreferecesSVC.getUserCategories(req.params.UserId);
+      const categoryIdList=await getPreferencesSVC.getUserCategories(req.params.UserId);
       return res.status(200).send({
           data: {
               userCategories: categoryIdList 
@@ -103,7 +103,7 @@ const getUserCategories = async (req, res, next) => {
 const getFavMemes = async (req, res, next) => {
   console.log("Inside getFavMemes");
   try{
-      const memeIdList = await getPreferecesSVC.getFavMemes(req.params.UserId);
+      const memeIdList = await getPreferencesSVC.getFavMemes(req.params.UserId);
       return res.status(200).send({
           data:{
               favMemes: memeIdList
@@ -124,7 +124,7 @@ const getMemeLikeness = async (req, res, next) => {
   console.log("Inside getMemeLikeness controller");
   console.log(req.body)
   try {
-      const memeIdLikenessList = await getPreferecesSVC.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
+      const memeIdLikenessList = await getPreferencesSVC.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
       return res.status(200).send({
           data: memeIdLikenessList
       })
@@ -162,7 +162,7 @@ route.get("/likeness/:MemeId/:UserId")
 module.exports = {
     createUser,
     login,
-    updateUserPreferences,
+    updateUserPreference,
     getUserCategories,
     getFavMemes,
     getMemeLikeness,
