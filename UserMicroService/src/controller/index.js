@@ -142,7 +142,7 @@ const updateMemeLikeness = async(req, res, next) => {
   console.log("Inside updateMemeLikeness controller");
   try {
       //Update Meme, CategoryActivity Tables --> Call to MemeMicroService 
-      const result = await 
+      // const result = await 
   } catch(err) {
     console.log("Error in updateMemeLikeness controller");
     next(err);
