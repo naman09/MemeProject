@@ -1,9 +1,9 @@
 const { hash } = require('bcrypt');
 const { getHashes } = require("crypto");
-const  { AuthUserSVC, CreateUserSVC, UpdateUserPreferenceSVC, GetPreferencesSVC } = require("../services");
+const  { AuthUserSVC, CreateUserSVC, UserPreferenceUpdaterSVC, GetPreferencesSVC } = require("../services");
 const createUserSVC = new CreateUserSVC();
 const authUserSVC = new AuthUserSVC();
-const updateUserPreferenceSVC = new UpdateUserPreferenceSVC();
+const userPreferenceUpdaterSVC = new UserPreferenceUpdaterSVC();
 const getPreferencesSVC = new GetPreferencesSVC();
 
 
@@ -17,7 +17,9 @@ const createUser = async (req, res, next) => {
     try{
         const results = await createUserSVC.createUser(userObj);
         return res.status(200).send({
-           data: results
+           data: {
+             token:results
+           }
         });
     } catch(err) {
         console.log("Error in createUser");
@@ -36,7 +38,7 @@ const login = async (req, res, next) => {
   try {
       const result = await authUserSVC.login(req.body.UserId, req.body.Password);
       if (result) {
-          res.status(200).send({
+          res.status(200).send({ //DONE : need to give userId as well (No need as client already has it)
               data: {
                   token: result
               }
@@ -58,19 +60,20 @@ const login = async (req, res, next) => {
   Input : UserId, MemeId, NewMemeLikeness, CategoryIdList
   Output: Success/Failure
 */
-const updateUserPreference =  async (req, res, next) => {
-  console.log("Inside updateUserPreferences")
+const userPreferenceUpdater =  async (req, res, next) => {
+  console.log("Inside userPreferenceUpdater");
+  console.log(req.body);
   const preferencesObj = req.body;
   try {
 
-      await updateUserPreferenceSVC.updateUserPreference(preferencesObj);
+      await userPreferenceUpdaterSVC.userPreferenceUpdater(preferencesObj);
       return res.status(200).send({
           data : {
               message:"User preferences updated successfully"
           }
       });
   } catch (err) {
-      console.log("Error in updateUserPreferences");
+      console.log("Error in userPreferenceUpdater");
       next(err);
   }
 }
@@ -162,7 +165,7 @@ route.get("/likeness/:MemeId/:UserId")
 module.exports = {
     createUser,
     login,
-    updateUserPreference,
+    userPreferenceUpdater,
     getUserCategories,
     getFavMemes,
     getMemeLikeness,

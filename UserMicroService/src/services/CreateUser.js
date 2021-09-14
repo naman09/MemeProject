@@ -2,7 +2,8 @@ const { User } = require('../models');
 const { hash } = require('bcrypt');
 const { getHashes } = require("crypto");
 const { DBError, InputError } = require("../errors");
-
+const { sign } = require('jsonwebtoken');
+require('dotenv').config();
 /*
     Create user in the database after validating it
 */
@@ -40,6 +41,15 @@ class CreateUserService {
       return true;
     }
 
+    generateToken(userObj) {
+      console.log("Generating JWT");
+      const jsontoken = sign({ result: userObj }, process.env.TOKEN_SECRET_KEY, { //TODO write secret Key correctly
+          expiresIn: "1h"
+      });
+      console.log("Token :", jsontoken);
+      return jsontoken;
+    }
+
     async createUser(userObj) {
       console.log("Inside createUser");
       if (!this.validateUserObj(userObj)) {
@@ -56,7 +66,8 @@ class CreateUserService {
         console.log(user) ;
         if(user){
             console.log("User created successfully");
-            return user;
+            user.Password = undefined;
+            return this.generateToken(user);
         }
         else {
             console.log("User creation failed");

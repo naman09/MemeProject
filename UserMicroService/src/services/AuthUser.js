@@ -1,10 +1,20 @@
 const { sign } = require('jsonwebtoken');
 const { compare } = require('bcrypt');
 const { User } = require('../models');
+require('dotenv').config();
 
 class AuthUserService {
     
     constructor() {}
+
+    generateToken(userObj) {
+        console.log("Generating JWT");
+        const jsontoken = sign({ result: userObj },process.env.TOKEN_SECRET_KEY , { //TODO write secret Key correctly
+            expiresIn: "1h"
+        });
+        console.log("Token :", jsontoken);
+        return jsontoken;
+    }
 
     async login(userId, password) {
         console.log("Inside login");
@@ -35,11 +45,8 @@ class AuthUserService {
                 // generate token
                 console.log("Password Matched");
                 userObj.Password = undefined;
-                const jsontoken = sign({ result: userObj }, "qwe1234", { //TODO write secret Key correctly
-                    expiresIn: "1h"
-                });
-                console.log("Token :", jsontoken);
-                return jsontoken;
+                
+                return this.generateToken(userObj);
             } else {
                 console.log("Password did not match");
                 return null;

@@ -4,8 +4,10 @@ const { InputError, DBError } = require('../errors');
 class GetTrendingMemes {
     constructor() {}
 
-    async fetchTrendingMemes(pageNo, pageSize) {
+    async getTrendingMemes(pageNo, pageSize) {
+        console.log("Inside getTrendingMeme SVC");
         if (pageNo < 0 || pageSize <= 0) {
+            console.log("pageNo:"+pageNo+" pageSize:"+pageSize);
             console.log("Invalid page parameters");
             throw new InputError("Invalid page parameters");
         } 
@@ -21,7 +23,8 @@ class GetTrendingMemes {
                 MemeId: meme.dataValues.MemeId,
                 MemeTitle: meme.dataValues.MemeTitle,
                 TotalMemeLikeness: meme.dataValues.TotalMemeLikeness,
-                ActualData: meme.dataValues.ActualData
+                MediaPath: meme.dataValues.MediaPath,
+                MediaType: meme.dataValues.MediaType
             }));
             return memeList ;
         } catch (err) {

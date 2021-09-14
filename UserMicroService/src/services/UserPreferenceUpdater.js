@@ -1,7 +1,7 @@
 const { UserCategory, UserMeme,db } = require('../models');
 const { Op, literal, INTEGER, query } = require('sequelize');
 
-class UpdateUserPreference {
+class userPreferenceUpdater {
     constructor() {}
 
     validatePreferencesObject(preferencesObj){
@@ -62,8 +62,8 @@ class UpdateUserPreference {
         return db.query(upsertQuery);
     }
 
-    async updateUserPreference(preferencesObj) { 
-        console.log("Inside updateUserPreference");
+    async userPreferenceUpdater(preferencesObj) { 
+        console.log("Inside userPreferenceUpdater");
         if (!this.validatePreferencesObject(preferencesObj)) {
             console.log("Invalid preferences object");
             const error = new Error("Error in preference object");
@@ -93,4 +93,4 @@ class UpdateUserPreference {
     }
 }
 
-module.exports = UpdateUserPreference;
+module.exports = userPreferenceUpdater;
