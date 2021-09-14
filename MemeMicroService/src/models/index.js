@@ -22,9 +22,13 @@ const Meme = db.define('Meme', {
         allowNull: false,
         unique: true,
     },
-    MediaName: {
+    OriginalMediaName: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    MediaType: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     MemeTitle: {
         type: DataTypes.STRING,

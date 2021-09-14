@@ -49,9 +49,10 @@ class MemeUploader {
     return Meme.create({
         MemeId: memeObj.MemeId,
         MediaPath: memeObj.MediaPath,
-        MediaName: memeObj.MediaName,
+        OriginalMediaName: memeObj.OriginalMediaName,
         MemeTitle: memeObj.MemeTitle,
         UploadedBy: memeObj.UploadedBy,
+        MediaType: memeObj.MediaType
     }, { transaction: transaction });
   }
 
@@ -72,7 +73,7 @@ class MemeUploader {
     memeObj.TagList = memeObj.TagString.split(",").map((tag) => tag.trim());
     const currentTimestamp = String(Math.round(new Date().getTime()/1000));
     const memeId = memeObj.UploadedBy + currentTimestamp ; //UserId + TIMESTAMP
-    memeObj.MediaName = media.name;
+    memeObj.OriginalMediaName = media.name;
     memeObj.MediaPath = memeId + media.name; //TODO: REmove in future
     memeObj.MemeId = memeId;
     console.log("MemeId generated : " + memeId);
