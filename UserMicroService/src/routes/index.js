@@ -7,7 +7,7 @@ const { createUser, login, userPreferenceUpdater, getUserCategories,
 route.post('/create', createUser);
 route.post('/login', login);
 route.use('/checktoken',checkToken); //Just for testing purpose
-route.put('/userPreferenceUpdater', userPreferenceUpdater); //Internal function
+route.post('/userPreferenceUpdater', userPreferenceUpdater); //Internal function
 route.get('/userCategories/:UserId', checkToken, getUserCategories) ;
 route.get('/favMemes/:UserId', checkToken, getFavMemes) ;
 route.post('/memeLikeness', getMemeLikeness); //UserMemeLikeness

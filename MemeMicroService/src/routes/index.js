@@ -1,13 +1,12 @@
 const { Router } = require('express');
 const route = Router();
-const { upload, userPreferenceUpdater, categoryDeciderHelper, getTrendingMemes, uploadFile } = require('../controller');
+const { upload, getTrendingMemes, likeMeme } = require('../controller');
 const { checkToken } = require('../controller/token_validation');
 
 //Upload meme and tags
-route.post("/upload", checkToken, upload);/*, categoryDeciderHelper, updatePreferences);*/
-route.post("/upload2", userPreferenceUpdater); //Just for testing purpose
+route.post("/upload", checkToken, upload);/*, categoryDeciderHelper, userPreferenceUpdater);*/
 route.get("/getTrendingMemes",getTrendingMemes)
-route.post("/uploadFile", uploadFile);
+route.post("/likeMeme", checkToken, likeMeme);
 
 
 //TODO: change upload to uploadMeme

@@ -79,7 +79,6 @@ class userPreferenceUpdater {
             ]);
             await transaction.commit();
             console.log("Transaction committed");
-            return 1;
         } catch (err) {
             await transaction.rollback();
             console.log("DB Error: " + err);
