@@ -51,7 +51,7 @@ class LikeUpdater {
       where:{
         MemeId: updateObj.MemeId
       }
-    })
+    },{transaction: transaction})
   }
 
   async updateCategoryActivity(updateObj, transaction) {
@@ -64,19 +64,19 @@ class LikeUpdater {
           [Op.in]: updateObj.CategoryIdList
         }
       }
-    }); 
+    },{transaction: transaction}); 
   }
 
   async update(updateObj) {
-    console.log("Inside like update");
+    console.log("Inside likeUpdater SVC");
     if (!this.validateUpdateObj(updateObj)) {
       throw new InputError("Invalud update Object");
     }
     const transaction = await db.transaction();
     try{
       await Promise.all([
-        this.updateCategoryActivity(updateObj),
-        this.updateMeme(updateObj)
+        this.updateCategoryActivity(updateObj, transaction),
+        this.updateMeme(updateObj, transaction)
       ])
       await transaction.commit();
       console.log("Transaction commited successfully!");

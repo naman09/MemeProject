@@ -24,7 +24,8 @@ class GetTrendingMemes {
                 MemeTitle: meme.dataValues.MemeTitle,
                 TotalMemeLikeness: meme.dataValues.TotalMemeLikeness,
                 MediaPath: meme.dataValues.MediaPath,
-                MediaType: meme.dataValues.MediaType
+                MediaType: meme.dataValues.MediaType,
+                ActivityCount: meme.dataValues.AllUsersMemeActivityCount
             }));
             return memeList ;
         } catch (err) {

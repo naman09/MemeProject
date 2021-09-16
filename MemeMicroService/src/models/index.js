@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 require('dotenv').config();
 
 const { DataTypes } = require('sequelize');
+const constants = require('../constants');
 const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}` ;
 
 console.log(path);
@@ -36,7 +37,7 @@ const Meme = db.define('Meme', {
     },
     TotalMemeLikeness: {
         type: DataTypes.BIGINT(11),
-        defaultValue: 0,
+        defaultValue: constants.NEW_MEME_LIKENESS_DEFAULT,
         allowNull: false,
     },
     UploadedAt: {
@@ -50,7 +51,7 @@ const Meme = db.define('Meme', {
     },
     AllUsersMemeActivityCount: {
         type: DataTypes.INTEGER,
-        defaultValue: 0,
+        defaultValue: constants.NEW_MEME_ACTIVITY_COUNT,
         allowNull: false,
     }
 });

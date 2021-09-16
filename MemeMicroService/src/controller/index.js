@@ -33,11 +33,11 @@ const likeMeme = async(req, res, next) => {
       NewMemeLikeness: req.body.NewMemeLikeness,
       CategoryIdList: categoryIdList
     };
-    const results = await Promise.all[ 
+    const results= await Promise.all([ 
       likeUpdaterSVC.update(updateObj),
       axios.post(process.env.USER_MS+ "api/userPreferenceUpdater", preferencesObj)
-    ];
-    if(results[0] && results[1].status === 200) {
+    ]);
+    if(results[0] && results[1].status=== 200) {
       res.status(200).send({
         data: {
           message: "Like/Dislike Operation successfull"
@@ -109,39 +109,6 @@ const upload = async (req, res, next) => {
 
 //upload, categoryDeciderHelper (In turn calls Category_MS), updateUserPreferences 
 
-/*
-    Input : MemeActualData + TagList //TODO: Could give URL also instead of ActualData
-    Output : List of CategoryIds --> Put them in request object
-*/
-const memeUploadHelper2 = async (req, res, next) => { //TODO: need to test
-  console.log("Inside categoryDeciderHelper controller");
-  try {
-    // Call CategoryMicroService to get CategoryIdList of a particular Meme 
-    req.body.CategoryIdList = ["1", "2", "3"];
-    const preferencesObj = {
-      UserId: req.body.UserId,
-      MemeId: req.body.MemeId,
-      NewMemeLikeness: constants.NEW_MEME_LIKENESS_DEFAULT, //User will like the meme which he uploads
-      CategoryIdList: req.body.CategoryIdList
-    };
-    const result = await Promise.all[ 
-      categoryUploaderSVC.upload(req.body.MemeId, req.body.CategoryIdList),
-      axios.post("/api/userPreferenceUpdater",preferencesObj)
-    ];
-    if(result[0] && result[1].data) { //TODO: complete it
-      res.status(200).send({
-        data: {
-          message: "Meme Uploaded Successfully",
-          MemeId: req.body.MemeId, 
-          MediaPath: req.body.MediaPath 
-        }
-      });
-    }
-  } catch (err) {
-    console.log("Error in categoryDeciderHelper");
-    next(err);
-  }
-}
 
 /*
     Input: pageNo, pageSize

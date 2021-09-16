@@ -1,6 +1,6 @@
 class DBError extends Error {
     constructor(message) {
-        message = "DB Error: " + String(message);
+        message = String(message);
         super(message);
 
         //DBError name will be used instead of generic Error in stacktraces

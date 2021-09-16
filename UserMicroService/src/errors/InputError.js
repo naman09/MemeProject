@@ -1,6 +1,6 @@
 class InputError extends Error {
     constructor(message) {
-        message = "Input Error: " + String(message);
+        message = String(message);
         super(message);
 
         //DBError name will be used instead of generic Error in stacktraces
