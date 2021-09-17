@@ -1,4 +1,4 @@
-const { MemeUploaderSVC , GetTrendingMemesSVC, LikeUpdaterSVC, CategoryUploaderSVC, GetCategoriesForMemeSVC } = require('../services');
+const { MemeUploaderSVC, GetTrendingMemesSVC, LikeUpdaterSVC, CategoryUploaderSVC, GetCategoriesForMemeSVC } = require('../services');
 const memeUploaderSVC = new MemeUploaderSVC();
 const getTrendingMemesSVC = new GetTrendingMemesSVC();
 const categoryUploaderSVC = new CategoryUploaderSVC();
@@ -12,17 +12,17 @@ require("dotenv").config();
 /*
   Input: UserId, MemeId, OldMemeLikeness, NewMemeLikeness 
 */
-const likeMeme = async(req, res, next) => {
+const likeMeme = async (req, res, next) => {
   console.log("Inside likeMeme controller");
   try {
     const categoryIdList = await getCategoriesForMemeSVC.getCategoriesForMeme(req.body.MemeId);
     const deltaMemeLikeness = req.body.NewMemeLikeness - req.body.OldMemeLikeness;
-    let deltaActivityCount = (req.body.OldMemeLikeness === 0 && req.body.NewMemeLikeness !== 0)? 1 : 0;
+    let deltaActivityCount = (req.body.OldMemeLikeness === 0 && req.body.NewMemeLikeness !== 0) ? 1 : 0;
     if (req.body.OldMemeLikeness !== 0 && req.body.NewMemeLikeness === 0) {
       deltaActivityCount = -1; //if we create meter likeness
     }
     const updateObj = {
-      MemeId: req.body.MemeId, 
+      MemeId: req.body.MemeId,
       CategoryIdList: categoryIdList,
       DeltaMemeLikeness: deltaMemeLikeness,
       DeltaActivityCount: deltaActivityCount
@@ -33,11 +33,11 @@ const likeMeme = async(req, res, next) => {
       NewMemeLikeness: req.body.NewMemeLikeness,
       CategoryIdList: categoryIdList
     };
-    const results= await Promise.all([ 
+    const results = await Promise.all([
       likeUpdaterSVC.update(updateObj),
-      axios.post(process.env.USER_MS+ "api/userPreferenceUpdater", preferencesObj)
+      axios.post(process.env.USER_MS + "api/userPreferenceUpdater", preferencesObj)
     ]);
-    if(results[0] && results[1].status=== 200) {
+    if (results[0] && results[1].status === 200) {
       res.status(200).send({
         data: {
           message: "Like/Dislike Operation successfull"
@@ -47,7 +47,7 @@ const likeMeme = async(req, res, next) => {
       console.log("Error in likeUpdater or userPreferenceUpdater");
       res.status(500).send({
         code: 500,
-        message: "Error in like Meme"     
+        message: "Error in like Meme"
       });
     }
   } catch (err) {
@@ -73,9 +73,9 @@ const memeUploadHelper = async (userId, memeId) => { //TODO: need to test
       NewMemeLikeness: constants.NEW_MEME_LIKENESS_DEFAULT, //User will like the meme which he uploads
       CategoryIdList: categoryIdList
     };
-    await Promise.all[ 
+    await Promise.all[
       categoryUploaderSVC.upload(memeId, categoryIdList),
-      axios.post(process.env.USER_MS+"api/userPreferenceUpdater", preferencesObj)
+      axios.post(process.env.USER_MS + "api/userPreferenceUpdater", preferencesObj)
     ];
     console.log("memeUploadHelper successfull");
   } catch (err) {
@@ -141,7 +141,7 @@ const getRecommendedMemes = async (req, res, next) => {
   try {
 
     const memeList = await getRecommendedMemesSVC.getRecommendedMemes(req.body.userId, req.body.pageNo, req.body.pageSize);
-    
+
 
   } catch (err) {
     console.log("Error in getRecommendedMemes controller");

@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize') ;
+const Sequelize = require('sequelize');
 require('dotenv').config();
 
 const { DataTypes } = require('sequelize');
-const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}` ;
+const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 
 const db = new Sequelize(path, {
     define: {
@@ -10,19 +10,19 @@ const db = new Sequelize(path, {
     }
 });
 
-const User = db.define('User',{
-    UserId:{
-        type:DataTypes.STRING,
+const User = db.define('User', {
+    UserId: {
+        type: DataTypes.STRING,
         primaryKey: true
     },
-    Password:{
-        type:DataTypes.STRING,
+    Password: {
+        type: DataTypes.STRING,
     }
 });
 
 //This table contains the Memes which user has liked.
 const UserMeme = db.define('UserMeme', {
-    MemeId : { //Treated like a foreign key of Meme.MemeId
+    MemeId: { //Treated like a foreign key of Meme.MemeId
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
@@ -55,31 +55,31 @@ User.hasMany(UserMeme, {
 // UserMeme.belongsToMany(Users)
 const UserCategory = db.define('UserCategory', {
     CategoryId: {
-        type:DataTypes.STRING,
-        allowNull: false ,
-        primaryKey:true 
+        type: DataTypes.STRING,
+        allowNull: false,
+        primaryKey: true
     },
     AccessCount: {
-        type:DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: false
     },
     UserActivityCount: {
-        type:DataTypes.INTEGER,
+        type: DataTypes.INTEGER,
         defaultValue: 1,
         allowNull: false
     },
     UserCategoryLikeness: {
-        type:DataTypes.BIGINT(11),
+        type: DataTypes.BIGINT(11),
         defaultValue: 0,
-        allowNull: false 
+        allowNull: false
     },
 });
 
-User.hasMany(UserCategory,{
-    foreignKey:{
-        name:'UserId',
-        primaryKey:true,
+User.hasMany(UserCategory, {
+    foreignKey: {
+        name: 'UserId',
+        primaryKey: true,
         allowNull: false,
     }
 });

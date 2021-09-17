@@ -11,36 +11,36 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/health', (req, res) => {
-  console.log("Inside UserMicroService health");
-  res.send("UserMicroService working fine :)");
+    console.log("Inside UserMicroService health");
+    res.send("UserMicroService working fine :)");
 });
 
-app.use('/api',require('../routes'));
+app.use('/api', require('../routes'));
 
 //TODO : How to it better
 app.use((err, req, res, next) => {
-  console.log("Error caught in error handler : " + err);
-  if (err.isBadRequest) {
-      return res.status(400).send({
-          code: 400,
-          message: err.message,
-          errors: err.errors
-      });
-  }
-  if (err.isUnauthorized) { //User will be redirected to login page
-      return res.status(400).send({
-          code: 401,
-          message: err.message,
-          errors: err.errors
-      });
-  }
-  res.status(500).send({
-      error: {
-          code: 500,
-          message: err.message,
-          errors: err.errors
-      }
-  });
+    console.log("Error caught in error handler : " + err);
+    if (err.isBadRequest) {
+        return res.status(400).send({
+            code: 400,
+            message: err.message,
+            errors: err.errors
+        });
+    }
+    if (err.isUnauthorized) { //User will be redirected to login page
+        return res.status(400).send({
+            code: 401,
+            message: err.message,
+            errors: err.errors
+        });
+    }
+    res.status(500).send({
+        error: {
+            code: 500,
+            message: err.message,
+            errors: err.errors
+        }
+    });
 });
 
 process.on("uncaughtException", (err) => {

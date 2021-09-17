@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const { DataTypes } = require('sequelize');
 const constants = require('../constants');
-const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}` ;
+const path = `mysql://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
 
 console.log(path);
 
@@ -24,8 +24,8 @@ const Meme = db.define('Meme', {
         unique: true,
     },
     OriginalMediaName: {
-      type: DataTypes.STRING,
-      allowNull: false
+        type: DataTypes.STRING,
+        allowNull: false
     },
     MediaType: {
         type: DataTypes.STRING,
@@ -56,22 +56,22 @@ const Meme = db.define('Meme', {
     }
 });
 
-const Tag = db.define('Tag',{
-    TagName:{
+const Tag = db.define('Tag', {
+    TagName: {
         type: DataTypes.STRING,
-        primaryKey: true  
+        primaryKey: true
     },
-    MemeCount:{
+    MemeCount: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0        
+        defaultValue: 0
     }
 });
 
 const MemeTag = db.define('MemeTag', {
-    TagName:{
+    TagName: {
         type: DataTypes.STRING,
-        primaryKey: true  
+        primaryKey: true
     },
     MemeId: {
         type: DataTypes.STRING,
@@ -79,7 +79,7 @@ const MemeTag = db.define('MemeTag', {
     }
 });
 
-Meme.hasMany(MemeTag,{
+Meme.hasMany(MemeTag, {
     foreignKey: {
         name: 'MemeId',
         primaryKey: true,
@@ -87,7 +87,7 @@ Meme.hasMany(MemeTag,{
     }
 });
 
-Tag.hasMany(MemeTag,{
+Tag.hasMany(MemeTag, {
     foreignKey: {
         name: 'TagName',
         primaryKey: true,
@@ -95,20 +95,20 @@ Tag.hasMany(MemeTag,{
     }
 });
 
-const CategoryActivity = db.define('CategoryActivity',{
-    CategoryId:{
+const CategoryActivity = db.define('CategoryActivity', {
+    CategoryId: {
         type: DataTypes.STRING,
-        primaryKey: true 
+        primaryKey: true
     },
     TotalCategoryLikeness: {
-        type:DataTypes.BIGINT(11),
+        type: DataTypes.BIGINT(11),
         defaultValue: 0,
-        allowNull: false 
+        allowNull: false
     },
     AllUsersCategoryActivityCount: {
         type: DataTypes.BIGINT(11),
         defaultValue: 0,
-        allowNull: false 
+        allowNull: false
     }
 });
 
@@ -117,9 +117,9 @@ const MemeCategory = db.define('MemeCategory', {
         type: DataTypes.STRING,
         primaryKey: true,
     },
-    CategoryId:{
+    CategoryId: {
         type: DataTypes.STRING,
-        primaryKey: true 
+        primaryKey: true
     },
 
 });
@@ -135,7 +135,7 @@ Meme.hasMany(MemeCategory, {
 CategoryActivity.hasMany(MemeCategory, {
     foreignKey: {
         name: 'CategoryId',
-        primaryKey: true, 
+        primaryKey: true,
         allowNull: false,
     }
 });

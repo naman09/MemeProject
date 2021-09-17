@@ -5,10 +5,10 @@ const { checkToken } = require('../controller/token_validation');
 
 //Upload meme and tags
 route.post("/upload", checkToken, upload);/*, categoryDeciderHelper, userPreferenceUpdater);*/
-route.get("/getTrendingMemes",getTrendingMemes)
+route.get("/getTrendingMemes", getTrendingMemes)
 route.post("/likeMeme", checkToken, likeMeme);
 
 
 //TODO: change upload to uploadMeme
 
-module.exports =  route;
+module.exports = route;
