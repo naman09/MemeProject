@@ -12,7 +12,7 @@ const getPreferencesSVC = new GetPreferencesSVC();
   Output: data of new user
 */
 const createUser = async (req, res, next) => {
-  console.log("Inside create user");
+  console.log("Inside createUser controller");
     const userObj = req.body ;
     try{
         const results = await createUserSVC.createUser(userObj);
@@ -34,7 +34,7 @@ const createUser = async (req, res, next) => {
 */
 
 const login = async (req, res, next) => { 
-  console.log("Inside login");
+  console.log("Inside login controller");
   try {
       const result = await authUserSVC.login(req.body.UserId, req.body.Password);
       if (result) {
@@ -61,7 +61,7 @@ const login = async (req, res, next) => {
   Output: Success/Failure
 */
 const userPreferenceUpdater =  async (req, res, next) => {
-  console.log("Inside userPreferenceUpdater");
+  console.log("Inside userPreferenceUpdater controller");
   console.log(req.body);
   const preferencesObj = req.body;
   try {
@@ -93,7 +93,7 @@ const getUserCategories = async (req, res, next) => {
       })
       
   } catch(err){
-      console.log("Error in getUserCategories controller");
+      console.log("Error in getUserCategories");
       next(err) ;
   }
 }
@@ -104,7 +104,7 @@ const getUserCategories = async (req, res, next) => {
   Output: MemeIdList
 */
 const getFavMemes = async (req, res, next) => {
-  console.log("Inside getFavMemes");
+  console.log("Inside getFavMemes controller");
   try{
       const memeIdList = await getPreferencesSVC.getFavMemes(req.params.UserId);
       return res.status(200).send({
@@ -132,7 +132,7 @@ const getMemeLikeness = async (req, res, next) => {
           data: memeIdLikenessList
       })
   } catch (err) {
-      console.log("Error in getMemeLikeness controller");
+      console.log("Error in getMemeLikeness");
       next(err);
   } 
 }
@@ -147,7 +147,7 @@ const updateMemeLikeness = async(req, res, next) => {
       //Update Meme, CategoryActivity Tables --> Call to MemeMicroService 
       // const result = await 
   } catch(err) {
-    console.log("Error in updateMemeLikeness controller");
+    console.log("Error in updateMemeLikeness");
     next(err);
   }
 }

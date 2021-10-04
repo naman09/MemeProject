@@ -13,6 +13,7 @@ class GetCategoriesForMeme {
     return true;
   }
   async getCategoriesForMeme(memeId) {
+    console.log("Inside getCategoriesForMeme SVC");
     if (!this.validateMemeId(memeId)) {
       const error = new InputError("Invalid MemeId");
       error.isBadRequest(true);

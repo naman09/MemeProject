@@ -94,6 +94,7 @@ class GetPreferences {
     //return list
     //TODO return only a few memes not all 
     async getFavMemes(userId) {
+        console.log("Inside getFavMemes SVC");
         if (!this.validateId(userId)) {
             throw new InputError("Invalid UserId");
         }

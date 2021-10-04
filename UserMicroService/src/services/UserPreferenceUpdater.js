@@ -63,7 +63,7 @@ class userPreferenceUpdater {
     }
 
     async userPreferenceUpdater(preferencesObj) {
-        console.log("Inside userPreferenceUpdater");
+        console.log("Inside userPreferenceUpdater SVC");
         if (!this.validatePreferencesObject(preferencesObj)) {
             console.log("Invalid preferences object");
             const error = new Error("Error in preference object");

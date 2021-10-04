@@ -63,7 +63,7 @@ const likeMeme = async (req, res, next) => {
   2. upload categories and 3. update user preference
 */
 const memeUploadHelper = async (userId, memeId) => { //TODO: need to test
-  console.log("Inside memeUploadHelper ");
+  console.log("Inside memeUploadHelper controller");
   try {
     // Call CategoryMicroService to get CategoryIdList of a particular Meme 
     const categoryIdList = ["1", "2", "3"];

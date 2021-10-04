@@ -20,15 +20,15 @@ app.use('/api', require('../routes'));
 //TODO : How to it better
 app.use((err, req, res, next) => {
     console.log("Error caught in error handler : " + err);
-    if (err.isBadRequest) {
-        return res.status(400).send({
+    if (err.isBadRequest) { //TODO: set the status code instead of some variable
+        return res.status(400).json({
             code: 400,
             message: err.message,
             errors: err.errors
         });
     }
     if (err.isUnauthorized) { //User will be redirected to login page
-        return res.status(400).send({
+        return res.status(401).send({
             code: 401,
             message: err.message,
             errors: err.errors

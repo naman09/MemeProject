@@ -19,7 +19,7 @@ class AuthUserService {
     }
 
     async login(userId, password) {
-        console.log("Inside login");
+        console.log("Inside login SVC");
         console.log(userId, password);
         if (!userId || !password) {
             console.log("Invalid UserId or Password");
@@ -52,8 +52,7 @@ class AuthUserService {
                 return null;
             }
         } catch (err) {
-            console.log("DB Error : " + err);
-            throw DBError(err);
+            throw new DBError(err);
         }
     }
 }

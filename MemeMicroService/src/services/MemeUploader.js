@@ -82,7 +82,7 @@ class MemeUploader {
 
   //Upload Meme, Tag, MemeTag
   async upload(memeObj, media) {
-    console.log("Inside upload");
+    console.log("Inside upload(MEME) SVC");
     if (!this.validate(memeObj)) {
       throw new InputError("Invalid Meme Object");
     }

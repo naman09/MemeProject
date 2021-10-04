@@ -51,7 +51,7 @@ class CreateUserService {
   }
 
   async createUser(userObj) {
-    console.log("Inside createUser");
+    console.log("Inside createUser SVC");
     if (!this.validateUserObj(userObj)) {
       throw new InputError("User Object Validation failed");
     }
