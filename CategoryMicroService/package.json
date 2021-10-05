@@ -1,0 +1,28 @@
+{
+  "name": "categorymicroservice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "app": "nodemon src/app.js",
+    "test": "jest",
+    "test-coverage": "jest --coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "jest": "^27.0.6",
+    "mysql2": "^2.3.0",
+    "nodemon": "^2.0.12",
+    "sequelize": "^6.6.5",
+    "supertest": "^6.1.4",
+    "deepai": "^1.0.17",
+    "jimp": "^0.16.1",
+    "ocr-space-api-wrapper": "^1.0.6"
+  },
+  "description": ""
+}
