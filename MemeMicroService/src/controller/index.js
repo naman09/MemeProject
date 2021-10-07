@@ -62,11 +62,12 @@ const likeMeme = async (req, res, next) => {
   1. call CategoryDecider_MS
   2. upload categories and 3. update user preference
 */
-const memeUploadHelper = async (userId, memeId) => { //TODO: need to test
+const memeUploadHelper = async (userId, memeId, mediaPath, mediaType) => { //TODO: need to test
   console.log("Inside memeUploadHelper controller");
   try {
     // Call CategoryMicroService to get CategoryIdList of a particular Meme 
-    const categoryIdList = ["1", "2", "3"];
+    const memeUrl = process.env.MEME_MS + "media/" + mediaPath;
+    const categoryIdList = await axios.post(process.env.CATEGORY_MS + "api/getCategories", { MemeUrl: memeUrl, MediaType: mediaType }); 
     const preferencesObj = {
       UserId: userId,
       MemeId: memeId,
@@ -89,7 +90,7 @@ const memeUploadHelper = async (userId, memeId) => { //TODO: need to test
     Input: MemeTitle, UploadedBy(UserId), TagString
     Output: MediaPath, MemeId --> This should be unique
 */
-//TODO : update Category Activity , MemeCategory
+//TODO : update Category   Activity , MemeCategory
 const upload = async (req, res, next) => {
   console.log("Inside upload controller");
   try {
@@ -97,7 +98,7 @@ const upload = async (req, res, next) => {
     console.log(req.files.mediaFile);
     const memeObj = req.body;
     const result = await memeUploaderSVC.upload(memeObj, req.files.mediaFile);
-    memeUploadHelper(req.body.UploadedBy, result.MemeId); //If throws error => mp unhandled promise rejection
+    memeUploadHelper(req.body.UploadedBy, result.MemeId, result.MediaPath, result.MediaType); //If throws error => mp unhandled promise rejection
     res.status(200).send({
       data: result
     });

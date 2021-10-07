@@ -1,5 +1,6 @@
 node_modules/
 coverage/
 MemeMicroService/src/server/media/* 
+CategoryMicroService/src/server/CategoryMedia/*
 redis*
-.env
+#.env

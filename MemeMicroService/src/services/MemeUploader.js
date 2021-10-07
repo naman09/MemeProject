@@ -110,7 +110,7 @@ class MemeUploader {
       console.log(meme);
       if (meme) {
         console.log("Meme uploaded successfully");
-        return { MemeId: meme.MemeId, MediaPath: meme.MediaPath };
+        return { MemeId: meme.MemeId, MediaPath: meme.MediaPath, MediaType: meme.MediaType };
       } else {
         console.log("Meme upload failed");
         const error = new Error("Upload failed");

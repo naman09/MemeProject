@@ -2,6 +2,8 @@ const Jimp = require('jimp');
 const ocrSpace = require('ocr-space-api-wrapper');
 require('dotenv').config();
 const { CATEGORY_MEDIA_BASE_URL } = require("../constants");
+const fs = require('fs/promises');
+const { existsSync } = require('fs'); 
 
 class RemTextInImage {
   constructor() { }
@@ -45,6 +47,12 @@ class RemTextInImage {
     } catch (err) {
       console.log(err);
       throw err;
+    }
+  }
+  removeFile(filePath) {
+    if (existsSync(filePath)) {
+      console.log("This file will be deleted : ", filePath);
+      fs.unlink(filePath); //Need to check this code  (checked)
     }
   }
 }
