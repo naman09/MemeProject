@@ -2,8 +2,8 @@ const { verify } = require('jsonwebtoken');
 require('dotenv').config();
 
 const checkToken = (req, res, next) => {
-    let token =  req.get('Authorization');
-    if(!token) {
+    let token = req.get('Authorization');
+    if (!token) {
         const error = new Error("Token Error: Token not present in auth header");
         error.isUnauthorized = true;
         throw error;
@@ -24,6 +24,6 @@ const checkToken = (req, res, next) => {
     });
 }
 
-module.exports = { 
+module.exports = {
     checkToken
 };

@@ -3,11 +3,13 @@ GetTrendingMemesSVC = require('./GetTrendingMemes');
 MemeUploaderSVC = require('./MemeUploader');
 LikeUpdaterSVC = require('./LikeUpdater');
 CategoryUploaderSVC = require('./CategoryUploader');
+GetCategoriesForMemeSVC = require('./GetCategoriesForMeme');
 
-module.exports = { 
-  GetRecommendedMemesSVC, 
-  GetTrendingMemesSVC, 
-  MemeUploaderSVC, 
+module.exports = {
+  GetRecommendedMemesSVC,
+  GetTrendingMemesSVC,
+  MemeUploaderSVC,
   LikeUpdaterSVC,
-  CategoryUploaderSVC
+  CategoryUploaderSVC,
+  GetCategoriesForMemeSVC
 };

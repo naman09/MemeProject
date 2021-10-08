@@ -1,24 +1,24 @@
-const { Meme,CategoryActivity,db } = require("../models");
+const { Meme, CategoryActivity, db } = require("../models");
 const { Op, literal } = require('sequelize');
-const {InputError, DBError} = require("../errors");
+const { InputError, DBError } = require("../errors");
 
 /*
   Input: updateObj{MemeId, CategoryIdList, DeltaMemeLikeness,DeltaActivityCount}
 */
 class LikeUpdater {
-  constructor(){}  
-  
+  constructor() { }
+
   validateUpdateObj(updateObj) {
-    if(!updateObj){
+    if (!updateObj) {
       console.log("updateObj cannot be undefined");
       return false;
     }
-    if(!updateObj.MemeId){
+    if (!updateObj.MemeId) {
       conosole.log("MemeId cannot be undefined");
       return false;
     }
-    if(typeof(updateObj.MemeId)!=="string"){
-      console.log("MemeId type expected string found " + typeof(updateObj.MemeId));
+    if (typeof (updateObj.MemeId) !== "string") {
+      console.log("MemeId type expected string found " + typeof (updateObj.MemeId));
       return false;
     }
     if (!updateObj.CategoryIdList) {
@@ -29,29 +29,29 @@ class LikeUpdater {
       console.log("CategoryActivity cannot be empty");
       return false;
     }
-    if (typeof(updateObj.CategoryIdList[0]) !== "string") {
-      console.log("CategoryId expected string found " + typeof(updateObj.CategoryIdList[0]));
+    if (typeof (updateObj.CategoryIdList[0]) !== "string") {
+      console.log("CategoryId expected string found " + typeof (updateObj.CategoryIdList[0]));
       return false;
     }
-    if (typeof(updateObj.DeltaMemeLikeness) !== "number") {
-      console.log("DeltaMemeLikeness expected number found " + typeof(updateObj.DeltaMemeLikeness));
+    if (typeof (updateObj.DeltaMemeLikeness) !== "number") {
+      console.log("DeltaMemeLikeness expected number found " + typeof (updateObj.DeltaMemeLikeness));
       return false;
     }
-    if (typeof(updateObj.DeltaActivityCount) !== "number") {
-      console.log("DeltaActivityCount expected number found " + typeof(updateObj.DeltaActivityCount));
+    if (typeof (updateObj.DeltaActivityCount) !== "number") {
+      console.log("DeltaActivityCount expected number found " + typeof (updateObj.DeltaActivityCount));
       return false;
     }
     return true;
   }
-  async updateMeme(updateObj,transaction) {
+  async updateMeme(updateObj, transaction) {
     return Meme.update({
       TotalMemeLikeness: literal(`TotalMemeLikeness + ${updateObj.DeltaMemeLikeness}`),
       AllUsersMemeActivityCount: literal(`AllUsersMemeActivityCount + ${updateObj.DeltaActivityCount}`)
-    },{
-      where:{
+    }, {
+      where: {
         MemeId: updateObj.MemeId
       }
-    })
+    }, { transaction: transaction })
   }
 
   async updateCategoryActivity(updateObj, transaction) {
@@ -59,24 +59,24 @@ class LikeUpdater {
       TotalCategoryLikeness: literal(`TotalCategoryLikeness + ${updateObj.DeltaMemeLikeness}`),
       AllUsersCategoryActivityCount: literal(`AllUsersCategoryActivityCount + ${updateObj.DeltaActivityCount}`)
     }, {
-      where: { 
+      where: {
         CategoryId: {
           [Op.in]: updateObj.CategoryIdList
         }
       }
-    }); 
+    }, { transaction: transaction });
   }
 
   async update(updateObj) {
-    console.log("Inside like update");
+    console.log("Inside likeUpdater SVC");
     if (!this.validateUpdateObj(updateObj)) {
       throw new InputError("Invalud update Object");
     }
     const transaction = await db.transaction();
-    try{
+    try {
       await Promise.all([
-        this.updateCategoryActivity(updateObj),
-        this.updateMeme(updateObj)
+        this.updateCategoryActivity(updateObj, transaction),
+        this.updateMeme(updateObj, transaction)
       ])
       await transaction.commit();
       console.log("Transaction commited successfully!");
