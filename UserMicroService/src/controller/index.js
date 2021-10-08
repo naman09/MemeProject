@@ -1,24 +1,25 @@
-const { Router } = require("express");
 const { hash } = require('bcrypt');
-const CreateUserService = require("../services/CreateUser");
-const AuthUserService = require("../services/AuthUser");
-const UpdatePreferenceService = require("../services/UpdatePreference");
-const GetPreferencesService = require("../services/GetPreferences");
 const { getHashes } = require("crypto");
-const createUserServiceInstance = new CreateUserService();
-const authUserServiceInstance = new AuthUserService();
-const updatePreferenceServiceInstance = new UpdatePreferenceService();
-const getPreferecesServiceInstance = new GetPreferencesService() ;
+const  { AuthUserSVC, CreateUserSVC, UserPreferenceUpdaterSVC, GetPreferencesSVC } = require("../services");
+const createUserSVC = new CreateUserSVC();
+const authUserSVC = new AuthUserSVC();
+const userPreferenceUpdaterSVC = new UserPreferenceUpdaterSVC();
+const getPreferencesSVC = new GetPreferencesSVC();
 
+
+/*
+  Input: userObj
+  Output: data of new user
+*/
 const createUser = async (req, res, next) => {
+  console.log("Inside createUser controller");
     const userObj = req.body ;
     try{
-        const hashedPassword = await hash(userObj.Password, 10);
-        userObj.Password = hashedPassword;
-        const results = await createUserServiceInstance.createUser(userObj);
+        const results = await createUserSVC.createUser(userObj);
         return res.status(200).send({
-            code: 200,
-            data: results
+           data: {
+             token:results
+           }
         });
     } catch(err) {
         console.log("Error in createUser");
@@ -27,86 +28,125 @@ const createUser = async (req, res, next) => {
     
 }
 
+/*
+  Input: UserId, Passsword
+  Output: token
+*/
 const login = async (req, res, next) => { 
-    console.log("Inside login");
-    try {
-        const result = await authUserServiceInstance.login(req.body.UserId, req.body.Password);
-        if (result) {
-            res.status(200).send({
-                data: {
-                    token: result
-                }
-            });
-        } else {
-            const error = new Error("Invalid UserId or Passsword");
-            error.isBadRequest = true;
-            throw error ;
-        }
-    } catch(err){
-        console.log("Error in login");   
-        next(err);
-    }
+  console.log("Inside login controller");
+  try {
+      const result = await authUserSVC.login(req.body.UserId, req.body.Password);
+      if (result) {
+          res.status(200).send({ //DONE : need to give userId as well (No need as client already has it)
+              data: {
+                  token: result
+              }
+          });
+      } else {
+          const error = new Error("Invalid UserId or Passsword");
+          error.isBadRequest = true;
+          throw error ;
+      }
+  } catch(err){
+      console.log("Error in login");   
+      next(err);
+  }
 }
 
-//TODO: it is like an internal function to be used by MemeMicro service
-const updatePreferences =  async (req, res, next) => {
-    console.log("Inside updatePreferences")
-    const preferencesObj = req.body;
-    try {
-        await updatePreferenceServiceInstance.updateUserPreferences(preferencesObj);
-        return res.status(200).send({
-            data : {
-                message:"User preferences updated successfully"
-            }
-        });
-    } catch (err) {
-        console.log("Error in updatePreferences");
-        next(err);
-    }
+//TODO: it is like an internal function to be used by MemeMicro service ???
+
+/*
+  Input : UserId, MemeId, NewMemeLikeness, CategoryIdList
+  Output: Success/Failure
+*/
+const userPreferenceUpdater =  async (req, res, next) => {
+  console.log("Inside userPreferenceUpdater controller");
+  console.log(req.body);
+  const preferencesObj = req.body;
+  try {
+
+      await userPreferenceUpdaterSVC.userPreferenceUpdater(preferencesObj);
+      return res.status(200).send({
+          data : {
+              message:"User preferences updated successfully"
+          }
+      });
+  } catch (err) {
+      console.log("Error in userPreferenceUpdater");
+      next(err);
+  }
 }
 
+/*
+  Input: userId
+  Output: CategoryIdList
+*/
 const getUserCategories = async (req, res, next) => {
-    try{
-        const categoryIdList=await getPreferecesServiceInstance.getUserCategories(req.params.UserId);
-        return res.status(200).send({
-            data: {
-                userCategories: categoryIdList 
-            }
-        })
-        
-    } catch(err){
-        console.log("Error in getUserCategories");
-        next(err) ;
-    }
+  console.log("Inside getUserCategories controller");
+  try{
+      const categoryIdList=await getPreferencesSVC.getUserCategories(req.params.UserId);
+      return res.status(200).send({
+          data: {
+              userCategories: categoryIdList 
+          }
+      })
+      
+  } catch(err){
+      console.log("Error in getUserCategories");
+      next(err) ;
+  }
 }
 
+/*
+  Input: UserId
+  Output: MemeIdList
+*/
 const getFavMemes = async (req, res, next) => {
-    console.log("Inside getFavMemes");
-    try{
-        const memeList = await getPreferecesServiceInstance.getFavMemes(req.params.UserId);
-        return res.status(200).send({
-            data:{
-                favMemes: memeList 
-            }
-        });
-    } catch(err){
-        console.log("Error in getFavMemes");
-        next(err);
-    }
+  console.log("Inside getFavMemes controller");
+  try{
+      const memeIdList = await getPreferencesSVC.getFavMemes(req.params.UserId);
+      return res.status(200).send({
+          data:{
+              favMemes: memeIdList
+          }
+      });
+  } catch(err){
+      console.log("Error in getFavMemes");
+      next(err);
+  }
 }
 
+/*
+  Input: userId, memeIdList
+  Output: memeIdLikenessList}
+*/
 const getMemeLikeness = async (req, res, next) => {
-    try {
-        const memeLikeness = await getPreferecesServiceInstance.getMemeLikeness(req.params.UserId, req.params.MemeId);
-        return res.status(200).send({
-            data: {
-                memeLikeness: memeLikeness 
-            }
-        })
-    } catch (err) {
-        console.log("Error in getMemeLikeness");
-        next(err);
-    } 
+  console.log("Inside getMemeLikeness controller");
+  console.log(req.body)
+  try {
+      const memeIdLikenessList = await getPreferencesSVC.getMemeLikeness(req.body.UserId, req.body.MemeIdList);
+      return res.status(200).send({
+          data: memeIdLikenessList
+      })
+  } catch (err) {
+      console.log("Error in getMemeLikeness");
+      next(err);
+  } 
+}
+/*
+  Input: UserId, MemeId, UserMemeLikeness
+  Output: Success or Failure
+*/
+//TODO: Remove this. NO need as making separate calls to MEME_MS USER_MS from UI
+const updateMemeLikeness = async(req, res, next) => {
+  console.log("Inside updateMemeLikeness controller");
+  try {
+      //Update Meme, CategoryActivity Tables --> Call to MemeMicroService 
+      // const result = await 
+  } catch(err) {
+    console.log("Error in updateMemeLikeness");
+    next(err);
+  }
 }
 
 
@@ -122,8 +162,9 @@ route.get("/likeness/:MemeId/:UserId")
 module.exports = {
     createUser,
     login,
-    updatePreferences,
+    userPreferenceUpdater,
     getUserCategories,
     getFavMemes,
-    getMemeLikeness
+    getMemeLikeness,
+    updateMemeLikeness
 }

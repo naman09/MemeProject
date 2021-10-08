@@ -1,3 +1,5 @@
+TODO: Use error classes everywhere
+
 curl http://localhost:5555/api/users/create --data '{"UserId":"Ramesh","Password":"xyzASD12@"}'
 curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/create 
 curl -d "UserId=Ran&Password=sdasdAASA123@@@" POST http://localhost:5555/api/login 
@@ -33,3 +35,6 @@ typeof str === "string"
         ('4',0,1,100,'43f75d5470b258bba1ba1e7a0c1eb734289a50cc') 
         ON DUPLICATE KEY UPDATE UserCategoryLikeness=UserCategoryLikeness + 100,
         UserActivityCount=UserActivityCount+1;
+        
+TODO: Create DBERROr and InputError class 
+TODO : Write error classes properly . Detect if DBError properly

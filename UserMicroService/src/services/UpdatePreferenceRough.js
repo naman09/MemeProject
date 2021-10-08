@@ -1,23 +1,23 @@
-const { UserCategory, UserMeme,db } = require('../models');
+const { UserCategory, UserMeme, db } = require('../models');
 const { Op, literal, INTEGER, query } = require('sequelize');
 
-class UpdatePreferenceService {
-    constructor() {}
+class UpdatePreference {
+    constructor() { }
 
-    validatePreferencesObject(preferencesObj){
+    validatePreferencesObject(preferencesObj) {
         if (!preferencesObj) return false;
-        if (typeof(preferencesObj.MemeId) !== "string") {
+        if (typeof (preferencesObj.MemeId) !== "string") {
             con
-            return false ;
+            return false;
         }
-        if (typeof(preferencesObj.UserId) !== "string") return false ;
-        if (typeof(preferencesObj.NewMemeLikeness) !== "number") return false ;
-        if (!preferencesObj.CategoryIdList) return false ;
-        if (!preferencesObj.CategoryIdList.length) return false ;
-        if (typeof(preferencesObj.CategoryIdList[0]) !== "string") return false ;
-        return true ;
+        if (typeof (preferencesObj.UserId) !== "string") return false;
+        if (typeof (preferencesObj.NewMemeLikeness) !== "number") return false;
+        if (!preferencesObj.CategoryIdList) return false;
+        if (!preferencesObj.CategoryIdList.length) return false;
+        if (typeof (preferencesObj.CategoryIdList[0]) !== "string") return false;
+        return true;
     }
-    
+
     async updateUserMeme(preferencesObj, transaction) {
         const date = new Date();
         return UserMeme.upsert({
@@ -30,37 +30,37 @@ class UpdatePreferenceService {
 
     getCategoryRows(preferencesObj) {
         return preferencesObj.CategoryIdList.map((categoryId) => {
-            return `('${categoryId}',0,1,${preferencesObj.NewMemeLikeness},'${preferencesObj.UserId}')` ;
+            return `('${categoryId}',0,1,${preferencesObj.NewMemeLikeness},'${preferencesObj.UserId}')`;
         }).join();
     }
     getUserCategoryUpsertQuery(preferencesObj) {
         const rows = this.getCategoryRows(preferencesObj);
-        const queryString=`INSERT INTO UserCategories 
+        const queryString = `INSERT INTO UserCategories 
         (CategoryId, AccessCount, UserActivityCount, UserCategoryLikeness, UserId) 
         VALUES ${rows}
         ON DUPLICATE KEY UPDATE UserCategoryLikeness=UserCategoryLikeness + ${preferencesObj.NewMemeLikeness},
-        UserActivityCount=UserActivityCount+1`;   
-        return queryString ; 
+        UserActivityCount=UserActivityCount+1`;
+        return queryString;
     }
 
-    async updateUserCategory(upsertQuery) {
+    async executeDBQuery(upsertQuery) {
         return db.query(upsertQuery);
     }
 
-    async updateUserPreferences(preferencesObj) { 
-        console.log("Inside updateUserPreferences");
+    async updateUserPreferences(preferencesObj) {
+        console.log("Inside updateUserPreferences SVC");
         if (!this.validatePreferencesObject(preferencesObj)) {
             console.log("Invalid preferences object");
             const error = new Error("Error in preference object");
             error.isBadRequest = true;
             throw error;
         }
-        const upsertQuery = this.getUserCategoryUpsertQuery(preferencesObj);
+        const userCategoryUpsertQuery = this.getUserCategoryUpsertQuery(preferencesObj);
         const transaction = await db.transaction();
-        try { 
+        try {
             await Promise.all([
                 this.updateUserMeme(preferencesObj, transaction),
-                this.updateUserCategory(upsertQuery)
+                this.executeDBQuery(userCategoryUpsertQuery)
             ]);
             await transaction.commit();
             console.log("Transaction committed");
@@ -78,4 +78,4 @@ class UpdatePreferenceService {
     }
 }
 
-module.exports = UpdatePreferenceService;
+module.exports = UpdatePreference;
