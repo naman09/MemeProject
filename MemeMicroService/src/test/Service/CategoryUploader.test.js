@@ -9,7 +9,7 @@ describe("CategoryUploader Service", () => {
   beforeAll(async () => {
     await db.sync();
   });
-  it("should upload categories", async () => {
+  xit("should upload categories", async () => {
     const randomIdList = [1, 2, 3].map((val) => (crypto.randomBytes(20).toString('hex')));
     try {
       const res = await categoryUploaderSVC.upload(
@@ -21,7 +21,7 @@ describe("CategoryUploader Service", () => {
       expect(true).toEqual(false);
     }
   });
-  it("should throw error if MemeId dne", async () => {
+  xit("should throw error if MemeId dne", async () => {
     const randomIdList = [1, 2, 3].map((val) => (crypto.randomBytes(20).toString('hex')));
     try {
       const res = await categoryUploaderSVC.upload(

@@ -32,7 +32,6 @@ const createUser = async (req, res, next) => {
   Input: UserId, Passsword
   Output: token
 */
-
 const login = async (req, res, next) => { 
   console.log("Inside login controller");
   try {
@@ -98,7 +97,6 @@ const getUserCategories = async (req, res, next) => {
   }
 }
 
-
 /*
   Input: UserId
   Output: MemeIdList
@@ -122,7 +120,6 @@ const getFavMemes = async (req, res, next) => {
   Input: userId, memeIdList
   Output: memeIdLikenessList}
 */
-
 const getMemeLikeness = async (req, res, next) => {
   console.log("Inside getMemeLikeness controller");
   console.log(req.body)

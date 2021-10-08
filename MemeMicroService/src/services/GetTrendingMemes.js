@@ -6,6 +6,7 @@ class GetTrendingMemes {
 
     async getTrendingMemes(pageNo, pageSize) {
         console.log("Inside getTrendingMeme SVC");
+        console.log(pageNo, pageSize);
         if (pageNo < 0 || pageSize <= 0) {
             console.log("pageNo:" + pageNo + " pageSize:" + pageSize);
             console.log("Invalid page parameters");

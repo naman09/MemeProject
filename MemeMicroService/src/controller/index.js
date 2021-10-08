@@ -1,9 +1,10 @@
-const { MemeUploaderSVC, GetTrendingMemesSVC, LikeUpdaterSVC, CategoryUploaderSVC, GetCategoriesForMemeSVC } = require('../services');
+const { MemeUploaderSVC, GetTrendingMemesSVC, LikeUpdaterSVC, CategoryUploaderSVC, GetCategoriesForMemeSVC, GetRecommendedMemesSVC } = require('../services');
 const memeUploaderSVC = new MemeUploaderSVC();
 const getTrendingMemesSVC = new GetTrendingMemesSVC();
 const categoryUploaderSVC = new CategoryUploaderSVC();
 const likeUpdaterSVC = new LikeUpdaterSVC();
 const getCategoriesForMemeSVC = new GetCategoriesForMemeSVC();
+const getRecommendedMemesSVC = new GetRecommendedMemesSVC();
 const axios = require('axios');
 const constants = require('../constants');
 const fs = require('fs');
@@ -51,14 +52,13 @@ const likeMeme = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log("Error in likeMeme controller");
+    console.log("Error caught in likeMeme controller");
     next(err);
   }
 }
 
 /*
   DOES POST PROCESSING OF UPLOAD MEME
-
   1. call CategoryDecider_MS
   2. upload categories and 3. update user preference
 */
@@ -67,7 +67,7 @@ const memeUploadHelper = async (userId, memeId, mediaPath, mediaType) => { //TOD
   try {
     // Call CategoryMicroService to get CategoryIdList of a particular Meme 
     const memeUrl = process.env.MEME_MS + "media/" + mediaPath;
-    const categoryIdList = await axios.post(process.env.CATEGORY_MS + "api/getCategories", { MemeUrl: memeUrl, MediaType: mediaType }); 
+    const categoryIdList = await axios.post(process.env.CATEGORY_MS + "api/getCategories", { MemeUrl: memeUrl, MediaType: mediaType });
     const preferencesObj = {
       UserId: userId,
       MemeId: memeId,
@@ -80,15 +80,15 @@ const memeUploadHelper = async (userId, memeId, mediaPath, mediaType) => { //TOD
     ];
     console.log("memeUploadHelper successfull");
   } catch (err) {
-    console.log("Error in memeUploadHelper");
+    console.log("Error caught in memeUploadHelper");
     throw err;
   }
 }
 
 /*
   Stores media generates media name, media path
-    Input: MemeTitle, UploadedBy(UserId), TagString
-    Output: MediaPath, MemeId --> This should be unique
+  Input: MemeTitle, UploadedBy(UserId), TagString
+  Output: MediaPath, MemeId --> This should be unique
 */
 //TODO : update Category   Activity , MemeCategory
 const upload = async (req, res, next) => {
@@ -103,7 +103,7 @@ const upload = async (req, res, next) => {
       data: result
     });
   } catch (err) {
-    console.log("Error in upload");
+    console.log("Error caught in upload");
     next(err);
   }
 }
@@ -120,17 +120,29 @@ const getTrendingMemes = async (req, res, next) => {
   try {
     const memeList = await getTrendingMemesSVC.getTrendingMemes(req.body.pageNo, req.body.pageSize);
     res.status(200).send({
-      data: {
-        TrendingMemeList: memeList
-      }
+      data: memeList
     });
   } catch (err) {
-    console.log("Error in getTrendingMemes controller");
+    console.log("Error caught in getTrendingMemes controller");
     next(err);
   }
 }
 
-
+const getUserCategories = async (req, res, next) => {
+  console.log("Inside getUserCategories controller");
+  console.log(req.body);
+  axios.defaults.headers.common["Authorization"] = req.get('Authorization');
+  try {
+    
+    const result = await axios.get(process.env.USER_MS + `api/userCategories/${req.body.UserId}`);
+    req.body.UserCategories = result.data.data.userCategories;
+    console.log('User Categories :'+result.data.data.userCategories);
+    next();
+  } catch (err) {
+    console.log("Error caught in getUserCategories controller");
+    next(err);
+  }
+}
 
 /*
   UserCategories --> Categories converted to Memes --> UserMemes 
@@ -140,30 +152,21 @@ const getTrendingMemes = async (req, res, next) => {
 const getRecommendedMemes = async (req, res, next) => {
   console.log("Inside getRecommendedMemes controller");
   try {
-
-    const memeList = await getRecommendedMemesSVC.getRecommendedMemes(req.body.userId, req.body.pageNo, req.body.pageSize);
-
-
+    const { pageNo, pageSize, UserCategories } = req.body;
+    const memeList = await getRecommendedMemesSVC.getRecommendedMemes(pageNo, pageSize, UserCategories);
+    res.status(200).send({
+      data: memeList
+    });
   } catch (err) {
-    console.log("Error in getRecommendedMemes controller");
+    console.log("Error caught in getRecommendedMemes controller");
     next(err);
   }
 }
-
-//TODO : SVC to convert a MemeId to CategoryIdList (Done)
-/*TODO:
-MemeUploader
-CategoryDeciderHelper
-UserPreferencesUpdater(??) 
-getTrendingMemes
-
-LikeUpdater
-FetchRecommendedMemes
-*/
 
 module.exports = {
   upload,
   getTrendingMemes,
   getRecommendedMemes,
-  likeMeme
+  likeMeme,
+  getUserCategories
 };

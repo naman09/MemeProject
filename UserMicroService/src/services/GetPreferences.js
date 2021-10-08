@@ -31,15 +31,12 @@ class GetPreferences {
         return true;
     }
 
-
-
     cmp(categoryA, categoryB) {
         const likenessA = categoryA.UserCategoryLikeness / categoryA.UserActivityCount;
         const likenessB = categoryB.UserCategoryLikeness / categoryB.UserActivityCount;
         console.log("A : ", likenessA, "B : ", likenessB);
         return likenessB - likenessA;
     }
-
     async getUserCategories(userId) {
         if (!this.validateId(userId)) {
             const error = new Error("Invalid user id");
@@ -55,7 +52,7 @@ class GetPreferences {
             categoryList = categoryList.map((category) => category.dataValues);
             categoryList.sort(this.cmp);
             const categoryIdList = categoryList.map((category) => category.CategoryId);
-            return categoryList;
+            return categoryIdList;
         } catch (err) {
             console.log("DB Error: " + err);
             const error = new Error("DB Error: " + err);
