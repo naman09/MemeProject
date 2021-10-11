@@ -5,7 +5,6 @@ const { DBError, InputError } = require("../errors");
   Insert data into CategoryActivity and MemeCategory tables
 */
 class CategoryUploader {
-  constructor() { }
   validateInput(memeId, categoryIdList) {
     if (!memeId) {
       console.log("MemeId cannot be null");
@@ -50,7 +49,7 @@ class CategoryUploader {
 
 
   async upload(memeId, categoryIdList) {
-    console.log("Inside Category Uploader SVC");
+    console.log("Inside categoryUploader SVC");
     if (!this.validateInput(memeId, categoryIdList)) {
       throw new InputError("Invalid memeId and categoryIdList");
     }

@@ -3,8 +3,6 @@ const { Op } = require('sequelize');
 const { DBError } = require("../errors");
 
 class GetRecommendedMemes {
-  constructor() { }
-
   cmp(memeA, memeB) {
     const likenessA = memeA.TotalMemeLikeness / memeA.AllUsersMemeActivityCount;
     const likenessB = memeB.TotalMemeLikeness / memeB.AllUsersMemeActivityCount;

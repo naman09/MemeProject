@@ -1,5 +1,6 @@
 const { hash } = require('bcrypt');
 const { getHashes } = require("crypto");
+const { DBError, InputError } = require("../errors")
 const  { AuthUserSVC, CreateUserSVC, UserPreferenceUpdaterSVC, GetPreferencesSVC } = require("../services");
 const createUserSVC = new CreateUserSVC();
 const authUserSVC = new AuthUserSVC();
@@ -43,9 +44,7 @@ const login = async (req, res, next) => {
               }
           });
       } else {
-          const error = new Error("Invalid UserId or Passsword");
-          error.isBadRequest = true;
-          throw error ;
+          throw new InputError("Invalid UserId or Passsword");
       }
   } catch(err){
       console.log("Error in login");   

@@ -8,9 +8,9 @@ const checkToken = (req, res, next) => {
         error.isUnauthorized = true;
         throw error;
     }
-    console.log(token);
+    // console.log(token);
     token = token.slice(7);//bearer <token>
-    console.log(token);
+    // console.log(token);
     verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => { //TODO write secret Key correctly
         if (err) {
             const error = new Error("Token Error: " + err);

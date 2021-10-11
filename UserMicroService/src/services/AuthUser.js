@@ -6,9 +6,6 @@ const { DBError, InputError } = require("../errors")
 require('dotenv').config();
 
 class AuthUserService {
-
-    constructor() { }
-
     generateToken(userObj) {
         console.log("Generating JWT");
         const jsontoken = sign({ result: userObj }, process.env.TOKEN_SECRET_KEY, { //TODO write secret Key correctly

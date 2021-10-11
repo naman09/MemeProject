@@ -18,6 +18,21 @@ describe("LikeUpdater Service", () => {
       DeltaActivityCount: 0
     });
     expect(res).toEqual(true);
-  })
-
+  });
+  it("should fail for invalid updateObj", async() => {
+    const updateObj = {
+      MemeId: "Naman11633968268",
+      CategoryIdList: ['ca','cb'],
+      DeltaMemeLikeness: 1/'a',
+      DeltaActivityCount: 0
+    };
+    try{
+      const res = await likeUpdaterSVC.update(updateObj);
+      console.log(res);
+      expect(0).toEqual(1);
+    }catch(err){
+      expect(1).toEqual(1);
+    }
+    
+  });
 })

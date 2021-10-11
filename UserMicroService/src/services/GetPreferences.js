@@ -3,8 +3,6 @@ const { Op } = require('sequelize');
 const { DBError, InputError } = require('../errors')
 
 class GetPreferences {
-    constructor() { }
-
     //TODO write proper validation function to know which field created problem
     validateId(id) {
         if (!id) {
@@ -38,10 +36,9 @@ class GetPreferences {
         return likenessB - likenessA;
     }
     async getUserCategories(userId) {
+        console.log("Inside getPreferences SVC");
         if (!this.validateId(userId)) {
-            const error = new Error("Invalid user id");
-            error.isBadReqlikenessAuest = true;
-            throw error;
+            throw InputError("Invalid user id");
         }
         try {
             let categoryList = await UserCategory.findAll({
@@ -54,17 +51,13 @@ class GetPreferences {
             const categoryIdList = categoryList.map((category) => category.CategoryId);
             return categoryIdList;
         } catch (err) {
-            console.log("DB Error: " + err);
-            const error = new Error("DB Error: " + err);
-            if (String(err).search("Validation error") != -1) {
-                error.isBadRequest = true;
-            }
-            throw error;
+            throw DBError(err);
         }
     }
 
 
     async getMemeLikeness(userId, memeIdList) {
+        console.log("Inside getPreferences SVC");
         if (!this.validateId(userId) || !this.validateIdList(memeIdList)) {
             throw new InputError("Invalid UserId or MemeIdList");
         }
@@ -91,7 +84,7 @@ class GetPreferences {
     //return list
     //TODO return only a few memes not all 
     async getFavMemes(userId) {
-        console.log("Inside getFavMemes SVC");
+        console.log("Inside getPreferences SVC");
         if (!this.validateId(userId)) {
             throw new InputError("Invalid UserId");
         }

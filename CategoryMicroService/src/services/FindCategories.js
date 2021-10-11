@@ -4,13 +4,12 @@ const { Category } = require('../models');
 require('dotenv').config();
 
 class FindCategories {
-    constructor() {}
-    async imageSimilarity(imgPath1,imgPath2) {
+    async imageSimilarity(imgPath1, imgPath2) {
         // throw Error("GGGG");
         deepai.setApiKey(process.env.IMAGE_SIMILARITY_API_KEY);
         const res = await deepai.callStandardApi("image-similarity", {
-                image1: fs.createReadStream(imgPath1),
-                image2: fs.createReadStream(imgPath2),
+            image1: fs.createReadStream(imgPath1),
+            image2: fs.createReadStream(imgPath2),
         });
         console.log(res);
         if (res.output.distance <= process.env.IMAGE_DIS_THRESH) {
@@ -29,7 +28,7 @@ class FindCategories {
         const promiseList = existingCategories.map((category) => this.imageSimilarity(category.CategoryInfo, memePath));
         const result = await Promise.all(promiseList);
         const categoriesMatched = [];
-        for(let idx in result) {
+        for (let idx in result) {
             if (result[idx]) {
                 categoriesMatched.push(existingCategories[idx].CategoryId);
             }

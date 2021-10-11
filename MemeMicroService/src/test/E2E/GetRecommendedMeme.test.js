@@ -7,7 +7,7 @@ describe('Get rec memes test', () => {
     beforeAll(async () => {
         await db.sync();
     });
-    it('should get memes', async () => {
+    xit('should get memes', async () => {
         const res = await request(app)
             .get('/api/getRecommededMemes/')
             .send({

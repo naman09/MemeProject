@@ -8,9 +8,6 @@ require('dotenv').config();
     Create user in the database after validating it
 */
 class CreateUserService {
-
-  constructor() { }
-
   validateUserObj(userObj) {
     console.log("Inside validateUserObj");
     if (!userObj) {

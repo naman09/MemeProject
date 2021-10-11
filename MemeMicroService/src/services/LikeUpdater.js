@@ -6,8 +6,6 @@ const { InputError, DBError } = require("../errors");
   Input: updateObj{MemeId, CategoryIdList, DeltaMemeLikeness,DeltaActivityCount}
 */
 class LikeUpdater {
-  constructor() { }
-
   validateUpdateObj(updateObj) {
     if (!updateObj) {
       console.log("updateObj cannot be undefined");
@@ -37,10 +35,19 @@ class LikeUpdater {
       console.log("DeltaMemeLikeness expected number found " + typeof (updateObj.DeltaMemeLikeness));
       return false;
     }
+    if (Number.isNaN(updateObj.DeltaMemeLikeness)) {
+      console.log("DeltaMemeLikenes is NaN");
+      return false;
+    }
     if (typeof (updateObj.DeltaActivityCount) !== "number") {
       console.log("DeltaActivityCount expected number found " + typeof (updateObj.DeltaActivityCount));
       return false;
     }
+    if (Number.isNaN(updateObj.DeltaActivityCount)) {
+      console.log("DeltaActivityCount is NaN");
+      return false;
+    }
+
     return true;
   }
   async updateMeme(updateObj, transaction) {
@@ -70,7 +77,7 @@ class LikeUpdater {
   async update(updateObj) {
     console.log("Inside likeUpdater SVC");
     if (!this.validateUpdateObj(updateObj)) {
-      throw new InputError("Invalud update Object");
+      throw new InputError("Invalid update Object");
     }
     const transaction = await db.transaction();
     try {

@@ -2,18 +2,17 @@ const { DBError } = require('../../../MemeMicroService/src/errors');
 const { Category } = require('../models');
 
 class AddNewCategory {
-    constructor() {}
     getNewId() {
         return String(new Date().getTime());
     }
     async addNewCategory(memePath) {
-        try{
+        try {
             let category = await Category.create({
                 CategoryId: this.getNewId(),
                 CategoryInfo: memePath
             });
             return category;
-        } catch(err) {
+        } catch (err) {
             throw DBError(err);
         }
     }

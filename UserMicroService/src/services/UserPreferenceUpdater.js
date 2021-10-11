@@ -1,9 +1,8 @@
 const { UserCategory, UserMeme, db } = require('../models');
 const { Op, literal, INTEGER, query } = require('sequelize');
+const { DBError, InputError } = require('../errors');
 
 class userPreferenceUpdater {
-    constructor() { }
-
     validatePreferencesObject(preferencesObj) {
         if (!preferencesObj) return false;
         if (typeof (preferencesObj.MemeId) !== "string") {
@@ -65,10 +64,7 @@ class userPreferenceUpdater {
     async userPreferenceUpdater(preferencesObj) {
         console.log("Inside userPreferenceUpdater SVC");
         if (!this.validatePreferencesObject(preferencesObj)) {
-            console.log("Invalid preferences object");
-            const error = new Error("Error in preference object");
-            error.isBadRequest = true;
-            throw error;
+            throw InputError("Invalid preferences object")
         }
         const userCategoryUpsertQuery = this.getUserCategoryUpsertQuery(preferencesObj);
         const transaction = await db.transaction();
@@ -81,13 +77,7 @@ class userPreferenceUpdater {
             console.log("Transaction committed");
         } catch (err) {
             await transaction.rollback();
-            console.log("DB Error: " + err);
-            const error = new Error("DB Error:" + err);
-            if (String(err).search("Validation error") != -1) {
-                error.isBadRequest = true;
-            }
-            error.isOperational = true;
-            throw error;
+            throw DBError(err);
         }
     }
 }

@@ -6,8 +6,6 @@ const { existsSync } = require('fs'); //Could be optimized
 
 // TODO Update CategoryActivity
 class MemeUploader {
-  constructor() { }
-
   validate(memeObj) {
     console.log("Validating memeObj");
     if (!memeObj) {

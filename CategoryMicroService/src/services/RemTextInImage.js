@@ -3,11 +3,9 @@ const ocrSpace = require('ocr-space-api-wrapper');
 require('dotenv').config();
 const { CATEGORY_MEDIA_BASE_URL } = require("../constants");
 const fs = require('fs/promises');
-const { existsSync } = require('fs'); 
+const { existsSync } = require('fs');
 
 class RemTextInImage {
-  constructor() { }
-
   async getTxtOverlay(imgUrl) {
     const res = await ocrSpace(imgUrl, { apiKey: process.env.OCR_SPACE_API_KEY, isOverlayRequired: true, OCREngine: 2, scale: true });
     //console.log(res.ParsedResults[0].TextOverlay);

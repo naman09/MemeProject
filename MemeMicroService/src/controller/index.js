@@ -15,6 +15,7 @@ require("dotenv").config();
 */
 const likeMeme = async (req, res, next) => {
   console.log("Inside likeMeme controller");
+  console.log(req.body);
   try {
     const categoryIdList = await getCategoriesForMemeSVC.getCategoriesForMeme(req.body.MemeId);
     const deltaMemeLikeness = req.body.NewMemeLikeness - req.body.OldMemeLikeness;
@@ -67,7 +68,8 @@ const memeUploadHelper = async (userId, memeId, mediaPath, mediaType) => { //TOD
   try {
     // Call CategoryMicroService to get CategoryIdList of a particular Meme 
     const memeUrl = process.env.MEME_MS + "media/" + mediaPath;
-    const categoryIdList = await axios.post(process.env.CATEGORY_MS + "api/getCategories", { MemeUrl: memeUrl, MediaType: mediaType });
+    const categoryIdListWrapper = await axios.post(process.env.CATEGORY_MS + "api/getCategories", { MemeUrl: memeUrl, MediaType: mediaType });
+    const categoryIdList = categoryIdListWrapper.data.data;
     const preferencesObj = {
       UserId: userId,
       MemeId: memeId,
@@ -116,7 +118,7 @@ const upload = async (req, res, next) => {
     Ouput: List of memes = { MemeId, MemeTitle, ActualData }
 */
 const getTrendingMemes = async (req, res, next) => {
-  console.log("Inside fetchTrendingMemems controller");
+  console.log("Inside getTrendingMemes controller");
   try {
     const memeList = await getTrendingMemesSVC.getTrendingMemes(req.body.pageNo, req.body.pageSize);
     res.status(200).send({
@@ -133,7 +135,6 @@ const getUserCategories = async (req, res, next) => {
   console.log(req.body);
   axios.defaults.headers.common["Authorization"] = req.get('Authorization');
   try {
-    
     const result = await axios.get(process.env.USER_MS + `api/userCategories/${req.body.UserId}`);
     req.body.UserCategories = result.data.data.userCategories;
     console.log('User Categories :'+result.data.data.userCategories);

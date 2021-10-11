@@ -5,6 +5,9 @@ const addNewCategorySVC = new AddNewCategorySVC();
 
 const getCategories = async (req, res, next) => {
     console.log("Inside getCategories controller");
+    return res.status(200).send({
+        data: ['cA', 'cB']
+    });
     try {
         console.log(req.body);
         if (req.body.MediaType) {
