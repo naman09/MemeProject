@@ -81,7 +81,7 @@ const userPreferenceUpdater =  async (req, res, next) => {
   Output: CategoryIdList
 */
 const getUserCategories = async (req, res, next) => {
-  console.log("Inside getUserCategories controller");
+  console.log("Inside getUserCategories(USER) controller");
   try{
       const categoryIdList=await getPreferencesSVC.getUserCategories(req.params.UserId);
       return res.status(200).send({

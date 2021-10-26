@@ -25,7 +25,7 @@ class GetRecommendedMemes {
         memeList.push(memeIdMemeMap.get(MemeId));
         categoryIdMemeMap.set(CategoryId, memeList);
       }
-      let finalMemeList = []
+      let finalMemeList = [];
       for (let [category, memeList] of categoryIdMemeMap) {
         memeList.sort(this.cmp);
         finalMemeList = finalMemeList.concat(memeList.slice(0, 5));
@@ -46,6 +46,7 @@ class GetRecommendedMemes {
           }
         }
       });
+      //SELECT * FROM MEMECATEGORY where Category IN (userCategories) GROUP BY Category LIMIT 10  
       memeCategoryList = memeCategoryList.map(memeCategory => memeCategory.dataValues);
       const memeIdList = memeCategoryList.map(meme => meme.MemeId);
       console.log(memeIdList);
