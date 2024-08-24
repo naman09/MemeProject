@@ -1,8 +1,14 @@
-# Yourmemes
- Site that caters personalized memes based on your like history.
+# Yourmemes - A Social Platform for Sharing and Viewing Memes
+Yourmemes is a website created for meme enthusiasts to easily share and view memes in a community-driven platform. Users can upload their favorite memes, browse through a vast collection, and engage with the content through likes and dislikes
 
-## Description
-Each meme is grouped into few categories(using AI/ML) and user is shown memes from these categories in order of their liking. 
+Features
+- Meme Sharing: Upload and share your favorite memes with the community.
+- Personalized Feed: Enjoy a customized feed tailored to your interests, thanks to our recommendation logic that adapts based on your like interactions.
+- User Engagement: Like, Dislike a meme.
+- [Responsive Frontend](https://github.com/naman09/MemeProject-UI): Created using ReactJS and MaterialUI
+
+## Personalized Feed
+Each meme is grouped into few categories (using AI/ML) and user is shown memes from these categories in order of their liking. 
 
 ## Documentation
 * [Dev Doc](https://docs.google.com/document/d/1fDswY0nFL5fJBlDBbFWY-Py2CpBsceFM_UnWux8aRGo/edit)
